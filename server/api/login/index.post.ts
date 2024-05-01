@@ -5,14 +5,13 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
 
     try {
-        // const res: SignupRes = await $fetch(`${config.public.backendBaseURL}/login`, {
-        //     method: "POST",
-        //     body
-        // })
-        // return res
-        return { token: '12345' }
+        const res = await $fetch(`${config.public.backendBaseURL}/login`, {
+            method: "POST",
+            body
+        })
+        return res
     }
     catch (e: any) {
-        throw createError({ status: e.status, message: `login error: ${e.message}` })
+        throw createError(e)
     }
 })
