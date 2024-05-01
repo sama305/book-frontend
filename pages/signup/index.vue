@@ -1,11 +1,24 @@
 <template>
-    <UInput placeholder="username..." v-model="username" />
-    <UInput placeholder="email..."  v-model="email" />
-    <UInput placeholder="password..." v-model="password" />
+    <div class="p-4 flex justify-between">
+        <div>
+            <p class="text-3xl">Sign up</p>
+        </div>
+    </div>
+    <hr>
+    <div class="p-4">
+        <div class="w-64">
+            <p class="text-s font-thin">Username</p>
+            <UInput class="mb-4" v-model="username" />
+            <p class="text-s font-thin">Email</p>
+            <UInput class="mb-4" v-model="email" />
+            <p class="text-s font-thin">Password</p>
+            <UInput class="mb-4" v-model="password" />
+        </div>
 
-    <UButton @click="signup" :disabled="!canCreateAccount">
-        Signup
-    </UButton>
+        <UButton @click="signup" :disabled="!canCreateAccount">
+            Signup
+        </UButton>
+    </div>
 </template>
 
 <script setup lang="ts">
