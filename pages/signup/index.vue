@@ -1,16 +1,22 @@
 <template>
-    <div class="w-64">
-        <p class="text-s font-thin">Username</p>
-        <UInput class="mb-4" v-model="username" />
-        <p class="text-s font-thin">Email</p>
-        <UInput class="mb-4" v-model="email" />
-        <p class="text-s font-thin">Password</p>
-        <UInput class="mb-4" v-model="password" />
-    </div>
+    <PageHeader>
+        <SignupHeader />
+    </PageHeader>
+    <hr>
+    <PageBody>
+        <div class="w-64">
+            <p class="text-s font-thin">Username</p>
+            <UInput class="mb-4" v-model="username" />
+            <p class="text-s font-thin">Email</p>
+            <UInput class="mb-4" v-model="email" />
+            <p class="text-s font-thin">Password</p>
+            <UInput class="mb-4" v-model="password" />
+        </div>
 
-    <UButton @click="signup" :disabled="!canCreateAccount">
-        Signup
-    </UButton>
+        <UButton @click="signup" :disabled="!canCreateAccount">
+            Signup
+        </UButton>
+    </PageBody>
 </template>
 
 <script setup lang="ts">
