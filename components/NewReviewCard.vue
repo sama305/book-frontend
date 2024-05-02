@@ -9,13 +9,6 @@
             v-model="rawSearchInput"
         />
         
-        <!-- Book search results -->
-        <!-- <div class="grid grid-cols-4">
-            <div class="mr-4" v-for="b in books">
-                <p>{{ b.title }}</p>
-                <img :src="b.imgUrl" />
-            </div>
-        </div> -->
         <div class="h-80">
             <UCarousel v-slot="{ item }" :items="books">
                 <div style="transition: opacity 0.8s ease; position: relative;" :class="isLoading ? 'loading' : ''" class="w-64">
