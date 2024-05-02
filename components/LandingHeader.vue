@@ -13,7 +13,7 @@
     </div>
     <div>
         <template v-if="JWTtoken">
-            <UButton class="mr-2">New Review</UButton>
+            <UButton @click="newReviewModal = true" class="mr-2">New Review</UButton>
             <UButton @click="logout" color="white">Logout</UButton>
         </template>
         <template v-else>
@@ -24,12 +24,12 @@
 
     <!-- Log In Modal -->
     <UModal v-model="loginModal" :overlay="false">
-        
+        <LoginCard @login="(user, pass) => login(user, pass)" />
     </UModal>
 
     <!-- Create Review Modal -->
-    <UModal v-model="loginModal" :overlay="false">
-        <LoginCard @login="(user, pass) => login(user, pass)" />
+    <UModal v-model="newReviewModal" :overlay="false">
+        <NewReviewCard />
     </UModal>
 </template>
 
@@ -39,6 +39,7 @@ import LoginCard from './LoginCard.vue';
 
 const searchQuery = ref('')
 const loginModal = ref(false)
+const newReviewModal = ref(false)
 
 const toast = useToast()
 const JWTtoken = useCookie('jwt_token')
@@ -77,6 +78,10 @@ async function login(username: string, password: string) {
             console.error(e)
         }
     }
+}
+
+async function newReview() {
+
 }
 
 async function logout() {
