@@ -1,19 +1,10 @@
 <template>
     <div>
         <p class="inline-block text-3xl mr-8" style="user-select: none; cursor: pointer;" @click="navigateTo('/')">Books.com</p>
-        <UInput 
-            variant="none" 
-            size="xl"
-            placeholder="Search..." 
-            icon="i-heroicons-magnifying-glass-20-solid"
-            autocomplete="off"
-            class="inline-block "
-            v-model="searchQuery"
-        />
     </div>
-    <div>
+    <div class="flex content-start">
         <template v-if="JWTtoken">
-            <UButton @click="newReviewModal = true" class="mr-2">New Review</UButton>
+            <UButton class="mr-2" icon="i-heroicons-pencil-square-16-solid" @click="newReviewModal = true">New Review</UButton>
             <UButton @click="logout" color="white">Logout</UButton>
         </template>
         <template v-else>
