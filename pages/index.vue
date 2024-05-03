@@ -1,15 +1,9 @@
 <template>
     <PageHeader>
-        <LandingHeader @search="(val) => { searchQuery = val}"/>
+        <LandingHeader />
     </PageHeader>
     <hr>
     <PageBody>
-        Welcome {{ searchQuery }}
+        Hello
     </PageBody>
 </template>
-
-<script setup lang="ts">
-const { searchQuery } = defineProps<{
-    searchQuery: string,
-}>()
-</script>
