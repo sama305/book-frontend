@@ -1,93 +1,83 @@
 <template>
-    <UCard>
-        <p class="text-s font-thin">Book Search</p>
+    <UCard style="transition: height 0.8 ease;">
         <UInput 
-            placeholder="Search..."
+            placeholder="Search for a book..."
             icon="i-heroicons-magnifying-glass-20-solid"
             class="mb-4"
             padded
             v-model="rawSearchInput"
         />
-        
-        <div class="h-80">
-            <UCarousel v-slot="{ item }" :items="books">
-                <div style="transition: opacity 0.8s ease; position: relative;" :class="isLoading ? 'loading' : ''" class="w-64">
-                    <img class="book-img" :src="item.imgUrl" />
-                    <p class="book-title text-2xl text-white" style="text-shadow: 2px 2px 12px #000000; width: 200px; position: absolute; top: 10px; left: 10px">{{ item.title }}</p>
+        <div class="h-72 mb-4">
+            <template v-if="selectedReviewBook === undefined">
+                <div class="flex">
+                    <UCarousel v-slot="{ item }" :items="results">
+                        <div @click="selectedReviewBook = item" style="transition: opacity 0.8s ease; position: relative;" :class="isLoading ? 'loading' : ''" class="flex book">
+                            <img width="200" class="book-img" :src="`https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`" />
+                            <p class="book-title text-2xl text-white" style="text-shadow: 2px 2px 12px #000000; width: 200px; position: absolute; top: 10px; left: 10px">{{ item.title }}</p>
+                        </div>
+                    </UCarousel>
                 </div>
-            </UCarousel>
+            </template>
+            <template v-else>
+                <div class="flex">
+                    <img class="book" style="float: left" :src="`https://covers.openlibrary.org/b/id/${selectedReviewBook.cover_i}-M.jpg`" />
+                    <div class="ml-4 flex flex-col justify-between">
+                        <div>
+                            <p class="text-2xl font-light">{{ selectedReviewBook.title }}</p>
+                            <p>By {{ selectedReviewBook.author_name }}</p>
+                        </div>
+                        <div>
+                            <UButton
+                                icon="i-heroicons-x-circle-16-solid"
+                                color="white"
+                                @click="selectedReviewBook = undefined"
+                            >
+                                Deselect
+                            </UButton>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
         <div class="h-full">
             <p class="text-s font-thin">Stars (<i>optional</i>)</p>
             <p class="text-s font-thin">Review body (<i>optional</i>)</p>
             <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." />
-            <UButton>Post Review</UButton>
+            <UButton :disabled="!canPostReview(selectedReviewBook)">Post Review</UButton>
         </div>
     </UCard>
 </template>
 
 <script setup lang="ts">
 import { debounce } from 'vue-debounce'
+import { type BookSearchInfo } from "~/types"
 
 const searchQuery = ref('')
 const rawSearchInput = ref('')
 
-watch(rawSearchInput, debounce(() => {
-    searchQuery.value = rawSearchInput.value;
+watch(rawSearchInput, debounce(async () => {
+    const res: {
+        results: Array<BookSearchInfo>,
+        numFound: number,
+    } = await $fetch('/api/search/query', {
+        method: 'POST',
+        body: {
+            query: rawSearchInput.value
+        }
+    })
+    results.value = res.results
+    searchQuery.value = rawSearchInput.value
 }, 400))
 
 const isLoading = computed(() => searchQuery.value != rawSearchInput.value)
 
-const books = [
-    {
-        title: "Harry Potter and the Sorcerer's Stone",
-        imgUrl: "https://picsum.photos/200/300?grayscale"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=1"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=2"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=3"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=4"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=5"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=6"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=7"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=8"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=9"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=10"
-    },
-    {
-        title: "test book",
-        imgUrl: "https://picsum.photos/200/300?grayscale?random=11"
-    }
-]
+const selectedReviewBook: Ref<BookSearchInfo | undefined> = ref(undefined)
+const results: Ref<Array<BookSearchInfo>> = ref([])
+    
+function canPostReview(book: BookSearchInfo | undefined) {
+    return book !== undefined
+}
+
 </script>
 
 <style>
@@ -111,4 +101,12 @@ const books = [
 .book-img:hover ~ .book-title {
     opacity: 100%;
 }
+
+.book {
+    max-height: 300px;
+    min-height: 300px;
+    max-width: 200px;
+    min-width: 200px;
+}
+
 </style>
