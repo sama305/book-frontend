@@ -13,7 +13,7 @@ WORKDIR /src
 # Build
 FROM base as build
 
-COPY --link package*.json /src
+COPY --link package*.json ./
 RUN npm install --production=false
 
 COPY --link . .
