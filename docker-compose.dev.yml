@@ -1,0 +1,23 @@
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.dev
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    volumes:
+      - .:/src
+      - node_modules:/src/node_modules
+    networks:
+      - book-network
+    environment:
+      - DEV_BACKEND_BASE_URL=${DEV_BACKEND_BASE_URL}
+
+volumes:
+  node_modules:
+
+networks:
+  book-network:
+    name: book-network
+    external: true
