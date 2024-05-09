@@ -9,7 +9,7 @@
         />
         <div class="h-72 mb-4">
             <template v-if="selectedReviewBook === undefined">
-                <div class="flex">
+                <div>
                     <UCarousel v-slot="{ item }" :items="results">
                         <div @click="selectedReviewBook = item" style="transition: opacity 0.8s ease; position: relative;" :class="isLoading ? 'loading' : ''" class="flex book">
                             <img width="200" class="book-img" :src="`https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`" />
