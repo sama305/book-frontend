@@ -54,7 +54,7 @@ export interface GetUserRes {
     username: string,
     email: string,
     description: string,
-    join_date: Date
+    join_date: string
 }
 
 
