@@ -1,15 +1,6 @@
 <template>
     <PageHeader>
-        <div>
-            <p class="inline-block text-3xl mr-8">
-                <template v-if="userInfo">
-                    {{ userInfo.username }}'s profile
-                </template>
-                <template v-else>
-                    User {{ username }} was not found
-                </template>
-            </p>
-        </div>
+        <LandingHeader />
     </PageHeader>
 
     <hr>
@@ -18,16 +9,26 @@
         <div class="mb-4">
             <UCard class="w-64">
                 <template #header>
-                    <p class="text-2xl">About me</p>
+                    <p class="text-2xl">{{ userInfo.username }} says...</p>
                 </template>
                 
-                <div v-if="!isEmpty(userDescription) && !editingDesc" style="white-space: pre-wrap;">
-                    {{ userDescription }}
-                </div>
-                <div v-if="editingDesc">
-                    <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
-                    <UButton icon="i-heroicons-check-16-solid" @click="editingDesc = false">Save</UButton>
-                </div>
+                <template v-if="!editingDesc">
+                    <div style="white-space: pre-wrap;">
+                        <template v-if="!isEmpty(userDescription)">
+                            "<i>{{ userDescription }}</i>"
+                        </template>
+                        <template v-else>
+                            There's nothing here yet!
+                        </template>
+                    </div>
+                </template>
+
+                <template v-else>
+                    <div>
+                        <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
+                        <UButton icon="i-heroicons-check-16-solid" @click="editingDesc = false">Save</UButton>
+                    </div>
+                </template>
             </UCard>
         </div>
         
