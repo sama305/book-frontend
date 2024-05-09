@@ -1,11 +1,11 @@
-import { SignupRes, UserCredentials } from "~/types"
+import { LoginReq, LoginRes } from "~/types"
 
 export default defineEventHandler(async (event) => {
-    const body: UserCredentials = await readBody(event)
+    const body: LoginReq = await readBody(event)
     const config = useRuntimeConfig()
 
     try {
-        const res = await $fetch(`${config.public.backendBaseURL}/login`, {
+        const res: LoginRes = await $fetch(`${config.public.backendBaseURL}/login`, {
             method: "POST",
             body
         })

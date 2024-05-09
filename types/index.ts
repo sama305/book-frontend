@@ -26,9 +26,10 @@ export interface GetReviewRes {
 
 /* /login */
 export interface LoginReq {
-    username: string,
-    password: string,
-    email: string,
+    username?: string,
+    password?: string,
+    email?: string,
+    token?: string
 }
 
 export interface LoginRes {
