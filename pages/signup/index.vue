@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { type SignupRes, type UserCredentials } from '~/types'
+import { type SignupReq, type SignupRes } from '~/types'
 
 const username = ref('')
 const email = ref('')
@@ -77,7 +77,7 @@ async function signup() {
     try {
         const res: SignupRes = await $fetch('/api/signup', {
             method: 'POST',
-            body: <UserCredentials>{
+            body: <SignupReq>{
                 username: username.value,
                 password: password.value,
                 email: email.value,
