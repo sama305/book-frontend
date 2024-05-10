@@ -7,16 +7,18 @@
 
     <PageBody v-if="userInfo">
         <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: auto auto auto; grid-template-rows: auto auto;">
-            <div class="aboutme w-full">
+            <div class="aboutme w-64">
                 <UCard class="h-full">
                     <div>
                         <p class="text-2xl font-semibold">About {{ userInfo.username }}...</p>
                         <template v-if="!editingDesc">
-                            <div v-if="!isEmpty(userDescription)" style="white-space: pre-wrap;">
-                                "<i>{{ userDescription }}</i>"
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <i>No description provided.</i>
+                            <div class="flex items-center justify-between" style="white-space: pre-wrap;">
+                                <template v-if="!isEmpty(userDescription)">
+                                    <i>{{ userDescription }}</i>
+                                </template>
+                                <template v-else>
+                                    <i>No description provided.</i>
+                                </template>
                                 <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
                         </template>
@@ -53,7 +55,7 @@
                                         <div>
                                             <p class="font-extralight text-3xl">{{ reviewBookData[i].title }}</p>
                                             <p class="font-extralight">By J. K. Rowling</p>
-                                            <p>{{ getStars(rev.rating) }}</p>
+                                            <p v-if="rev.rating >= 1">{{ getStars(rev.rating) }}</p>
                                         </div>
                                         <div class="p-4">
                                             <div v-if="!isEmpty(rev.content)" style="white-space: pre-wrap;">
