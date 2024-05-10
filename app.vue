@@ -4,25 +4,27 @@
 </template>
 
 <script setup lang="ts">
-// import type { LoginRes } from './types';
+import { jwtDecode } from 'jwt-decode'
 
-// const jwtToken = useCookie('jwt_token')
+const jwtToken = useCookie('jwt_token')
 
-// if (jwtToken && jwtToken.value) {
-//     try {
-//         const res: LoginRes = await $fetch('/api/login', {
-//             method: 'POST',
-//             body: {
-//                 token: jwtToken.value
-//             }
-//         })
+if (jwtToken && jwtToken.value) {
+    try {
+        const payload: any = jwtDecode(jwtToken.value)
         
-//         if (res.token != jwtToken.value)
-//             jwtToken.value = res.token
-//     }
-//     catch(e: any) {
-//         console.error(e)
-//         jwtToken.value = undefined
-//     }
-// }
+        const res = await $fetch(`/api/user/${payload.username}`, {
+            method: 'GET'
+        })
+
+        // user does not exist on backend
+        console.log(res.username)
+        if (payload.username !== res.username) {
+            jwtToken.value = undefined
+        }
+    }
+    catch(InvalidTokenError) {
+        console.error('Invalid token')
+        jwtToken.value = undefined
+    }
+}
 </script>
