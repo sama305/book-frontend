@@ -69,6 +69,9 @@ async function login(username: string, password: string) {
             console.error(e)
         }
     }
+    finally {
+        reloadNuxtApp()
+    }
 }
 
 function onPostReview(reviewId: string) {
@@ -80,6 +83,7 @@ function onPostReview(reviewId: string) {
 
 async function logout() {
     JWTtoken.value = undefined
+    reloadNuxtApp()
 }
 
 function routeToSignup() {

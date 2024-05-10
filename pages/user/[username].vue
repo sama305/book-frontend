@@ -31,7 +31,7 @@
             <div class="other">
                 <UCard class="h-full">
                     <p>Joined {{ new Date(userInfo.join_date).toISOString().slice(0,10) }}</p>
-                    <UButton variant="link">
+                    <UButton variant="ghost">
                         <div class="flex items-center">
                             <UIcon class="mr-2" name="i-heroicons-envelope" />
                             <p>{{ userInfo.email }}</p>
@@ -41,8 +41,8 @@
             </div>
             <div class="reviews">
                 <UCard class="h-full">
-                    <p class="text-2xl font-semibold">Book Reviews</p>
-                    <div v-if="reviewBookData.length > 0" class="flex flex-wrap justify-start">
+                    <p class="text-2xl font-semibold mb-2">Book Reviews</p>
+                    <div v-if="reviewBookData && userReviews" class="flex flex-wrap justify-start">
                         <template v-for="(rev, i) in userReviews.slice(0, 4)">
                             <div class="flex justify-start w-1/2 mb-4">
                                 <div>
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </template>
-                        <template v-if="userReviews.length > 4">
+                        <template v-if="userReviews && userReviews.length > 4">
                             <UButton variant="link">
                                 See more reviews ({{ userReviews.length - 4 }} more)
                             </UButton>
@@ -105,14 +105,16 @@ if (userInfo) {
         method: 'GET'
     })
     
-    for (let i = 0; i < userReviews.value.length; i++) {
-    // userReviews.value.forEach(async (rev) => {
-        const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`)
-        reviewBookData.value.push({
-            authors: res.authors,
-            title: res.title,
-            cover_i: res.covers[0] ?? ''
-        })
+    if (userReviews.value) {
+        for (let i = 0; i < userReviews.value.length; i++) {
+        // userReviews.value.forEach(async (rev) => {
+            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`)
+            reviewBookData.value.push({
+                authors: res.authors,
+                title: res.title,
+                cover_i: res.covers[0] ?? ''
+            })
+        }
     }
 
     // validate incoming user

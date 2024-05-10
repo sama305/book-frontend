@@ -111,7 +111,7 @@ async function postReview() {
         body: <PostReviewReq>{
             content: reviewContent.value,
             rating: reviewStars.value,
-            worksid: selectedReviewBook.value?.key
+            worksid: selectedReviewBook.value?.key.slice(7)
         }
     })
     emit('postReview', res.reviewid)

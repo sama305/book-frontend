@@ -17,7 +17,6 @@ if (jwtToken && jwtToken.value) {
         })
 
         // user does not exist on backend
-        console.log(res.username)
         if (payload.username !== res.username) {
             jwtToken.value = undefined
         }
