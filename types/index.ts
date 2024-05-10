@@ -79,3 +79,13 @@ export interface GetReviewRes {
 export interface DeleteReviewReq {
     token: string,
 }
+
+/* /user/[username]/reviews */
+export type GetUserReviewsRes = Array<{
+    username: string
+    worksid: string
+    reviewid: string
+    content: string
+    rating: number
+    post_date: string
+}>
