@@ -17,6 +17,11 @@
                         </div>
                     </UCarousel>
                 </div>
+                <template v-if="isLoading">
+                    <div class="absolute top-0 left-0 h-3/4 w-full m-auto flex justify-center">
+                        <UIcon size="20px" class="self-center" dynamic name="svg-spinners:bars-rotate-fade"/>
+                    </div>
+                </template>
             </template>
             <template v-else>
                 <div class="flex">
@@ -41,31 +46,50 @@
         </div>
         <div class="h-full">
             <p class="text-s font-thin">Stars (<i>optional</i>)</p>
+            <UInput min="0" max="10" type="number" v-model="reviewStars" />
             <p class="text-s font-thin">Review body (<i>optional</i>)</p>
-            <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." />
-            <UButton :disabled="!canPostReview(selectedReviewBook)">Post Review</UButton>
+            <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." v-model="reviewContent" />
+            <UButton icon="i-heroicons-check-16-solid" :disabled="!canPostReview(selectedReviewBook)" @click="postReview">Post Review</UButton>
         </div>
     </UCard>
 </template>
 
 <script setup lang="ts">
 import { debounce } from 'vue-debounce'
-import { type BookSearchInfo } from "~/types"
+import { type BookSearchInfo, type PostReviewReq, type PostReviewRes } from "~/types"
+
+const emit = defineEmits(['postReview'])
+
+const jwtToken = useCookie('jwt_token')
 
 const searchQuery = ref('')
 const rawSearchInput = ref('')
 
+const reviewContent = ref('')
+const reviewStars = ref(0)
+
 watch(rawSearchInput, debounce(async () => {
-    const res: {
-        results: Array<BookSearchInfo>,
-        numFound: number,
-    } = await $fetch('/api/search/query', {
-        method: 'POST',
-        body: {
-            query: rawSearchInput.value
-        }
-    })
-    results.value = res.results
+    try {
+        const res: {
+            results: Array<BookSearchInfo>,
+            numFound: number,
+        } = await $fetch('/api/search/query', {
+            method: 'POST',
+            body: {
+                query: rawSearchInput.value
+            }
+        })
+
+        results.value = res.results
+    }
+    catch(e: any) {
+        console.error(e)
+        const toast = useToast()
+        toast.add({
+            title: 'Oops! An error with the OpenLibrary servers occured.'
+        })
+    }
+
     searchQuery.value = rawSearchInput.value
 }, 400))
 
@@ -76,6 +100,21 @@ const results: Ref<Array<BookSearchInfo>> = ref([])
     
 function canPostReview(book: BookSearchInfo | undefined) {
     return book !== undefined
+}
+
+async function postReview() {
+    const res: PostReviewRes = await $fetch('/api/review', {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        },
+        body: <PostReviewReq>{
+            content: reviewContent.value,
+            rating: reviewStars.value,
+            worksid: selectedReviewBook.value?.key
+        }
+    })
+    emit('postReview', res.reviewid)
 }
 
 </script>

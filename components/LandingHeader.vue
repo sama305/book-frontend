@@ -20,7 +20,7 @@
 
     <!-- Create Review Modal -->
     <UModal v-model="newReviewModal" :overlay="false">
-        <NewReviewCard />
+        <NewReviewCard @post-review="onPostReview" />
     </UModal>
 </template>
 
@@ -71,8 +71,11 @@ async function login(username: string, password: string) {
     }
 }
 
-async function newReview() {
-
+function onPostReview(reviewId: string) {
+    newReviewModal.value = false
+    toast.add({
+        title: `New review ${reviewId} added.`,
+    })
 }
 
 async function logout() {
