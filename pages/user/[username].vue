@@ -10,14 +10,13 @@
             <div class="aboutme">
                 <UCard class="h-full">
                     <div>
-                        <p class="text-2xl font-semibold">About {{ userInfo.username }}...</p>
                         <template v-if="!editingDesc">
                             <div class="flex items-center justify-between" style="white-space: pre-wrap;">
                                 <template v-if="!isEmpty(userDescription)">
                                     <i>{{ userDescription }}</i>
                                 </template>
                                 <template v-else>
-                                    <i>No description provided.</i>
+                                    <i>'{{ userInfo.username }}'' hasn't written a profile description yet.</i>
                                 </template>
                                 <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
@@ -42,39 +41,40 @@
                 </UCard>
             </div>
             <div class="reviews">
-                <UCard class="h-full">
-                    <p class="text-2xl font-semibold mb-2">Book Reviews</p>
-                    <div v-if="reviewBookData && userReviews" class="flex flex-wrap justify-start">
-                        <template v-for="(rev, i) in userReviews.slice(0, 4)">
-                            <div class="w-1/2 p-4">
-                                <div class="flex justify-start mb-2">
-                                    <img width="110" height="140" class="mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[i].cover_i}-M.jpg`"/>
-                                    <div class="flex flex-col justify-between">
+                <UCard class="h-full flex flex-col justify-between">
+                    <div class="flex-1 flex flex-wrap justify-start">
+                        <template v-if="userReviews">
+                            <template v-for="rev in userReviews.slice(0, 4)">
+                                <template v-if="reviewBookData && reviewBookData[rev.reviewid]">
+                                    <div class="w-1/2 p-4">
+                                        <div class="flex justify-start mb-2">
+                                            <img width="110" height="140" class="mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
+                                            <div class="flex flex-col justify-between">
+                                                <div>
+                                                    <p class="font-extralight text-3xl line-clamp-2 overflow-hidden overflow-ellipsis" :title="reviewBookData[rev.reviewid].title">
+                                                        {{ reviewBookData[rev.reviewid].title }}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
+                                                    <p v-if="rev.rating >= 1" class="font-extrabold">{{ getStars(rev.rating) }}</p>
+                                                    <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div>
-                                            <p class="font-extralight text-3xl line-clamp-2 overflow-hidden overflow-ellipsis" :title="reviewBookData[i].title">
-                                                {{ reviewBookData[i].title }}
+                                            <p class="text-justify">
+                                                <template v-if="!isEmpty(rev.content)">
+                                                    "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
+                                                </template>
                                             </p>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
-                                            <p v-if="rev.rating >= 1" class="font-extrabold">{{ getStars(rev.rating) }}</p>
-                                            <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-right-16-solid">Full review</UButton>
-                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <p class="text-justify">
-                                        <template v-if="!isEmpty(rev.content)">
-                                            "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
-                                        </template>
-                                    </p>
-                                </div>
-                            </div>
-                        </template>
-                        <template v-if="userReviews && userReviews.length > 4">
-                            <UPagination :max="5" :page-count="1" :total="5" v-model="currentPage"/>
+                                </template>
+                            </template>
                         </template>
                     </div>
+                    <UPagination :max="5" :page-count="1" :total="5" v-model="currentPage"/>
                 </UCard>
             </div>
         </div>
@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, GetUserReviewsRes } from '~/types';
+import type { GetUserRes, GetUserReviewsRes, HashTable } from '~/types';
 import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
@@ -98,7 +98,7 @@ const currentPage = ref(1)
 const editingDesc = ref(false)
 const userDescription = ref('')
 const userReviews: Ref<GetUserReviewsRes> = ref([]);
-const reviewBookData: Ref<any> = ref([])
+const reviewBookData: Ref<HashTable<any>> = ref({})
 
 const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
     method: 'GET'
@@ -138,16 +138,22 @@ async function getPageOfReviews(page: number) {
     })
     
     if (userReviews.value) {
+        // reset it
         for (let i = 0; i < userReviews.value.length; i++) {
-        // userReviews.value.forEach(async (rev) => {
-            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
-                method: 'GET',
-            })
-            reviewBookData.value.push({
-                authors: res.authors,
-                title: res.title,
-                cover_i: res.covers[0] ?? ''
-            })
+            // if data hasn't been fetched yet, fetch it
+            const val = reviewBookData.value[userReviews.value[i].reviewid]
+            if (val === undefined) {
+                const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
+                    method: 'GET',
+                })
+
+                // create new entry at the review id
+                reviewBookData.value[userReviews.value[i].reviewid] = {
+                    authors: res.authors,
+                    title: res.title,
+                    cover_i: res.covers[0] ?? ''
+                }
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
     <div class="flex content-start">
         <template v-if="JWTtoken">
             <UButton class="mr-2" icon="i-heroicons-pencil-square-16-solid" @click="newReviewModal = true">New Review</UButton>
-            <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+            <UDropdown :items="ops" :popper="{ placement: 'bottom-start' }">
                 <UButton :ui="{ rounded: 'rounded-full' }" square class="mr-2" color="white" icon="i-heroicons-user-circle-16-solid"/>
             </UDropdown>
         </template>
@@ -44,7 +44,7 @@ watch(searchQuery, (oldVal, _) => {
     emit('search', oldVal)
 })
 
-const items = [
+const ops = [
     [
         {
             label: 'Navigate to profile',
@@ -58,7 +58,13 @@ const items = [
                     await logout()
                 }
             }
-        }, 
+        },
+    ], 
+    [
+        {
+            label: 'Settings',
+            icon: 'i-heroicons-cog-8-tooth-16-solid',
+        },
         {
             label: 'Logout',
             icon: 'i-heroicons-arrow-right-end-on-rectangle-16-solid',

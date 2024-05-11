@@ -89,3 +89,7 @@ export type GetUserReviewsRes = Array<{
     rating: number
     post_date: string
 }>
+
+export interface HashTable<T> {
+    [key: string]: T;
+}

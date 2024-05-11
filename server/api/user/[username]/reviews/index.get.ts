@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
         console.log()
         const res: GetUserReviewsRes = await $fetch(`${config.public.backendBaseURL}/user/${username}/reviews`, {
             method: "GET",
-            params: {
+            query: {
                 sort_order: "post_date",
                 sort_dir: "ascending",
                 page: queries.page,
