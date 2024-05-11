@@ -48,7 +48,7 @@
                         <template v-for="(rev, i) in userReviews.slice(0, 4)">
                             <div class="w-1/2 p-4">
                                 <div class="flex justify-start mb-2">
-                                    <img class="w-[130px] h-[200px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[i].cover_i}-M.jpg`"/>
+                                    <img width="110" height="140" class="mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[i].cover_i}-M.jpg`"/>
                                     <div class="flex flex-col justify-between">
                                         <div>
                                             <p class="font-extralight text-3xl line-clamp-2 overflow-hidden overflow-ellipsis" :title="reviewBookData[i].title">
