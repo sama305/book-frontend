@@ -16,7 +16,7 @@
                                     <i>{{ userDescription }}</i>
                                 </template>
                                 <template v-else>
-                                    <i>'{{ userInfo.username }}'' hasn't written a profile description yet.</i>
+                                    <i>'{{ userInfo.username }}' hasn't written a profile description yet.</i>
                                 </template>
                                 <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
@@ -49,12 +49,13 @@
                                     <template v-if="reviewBookData && reviewBookData[rev.reviewid]">
                                         <div class="w-1/2 p-4">
                                             <div class="flex justify-start mb-2">
-                                                <img width="110" height="140" class="mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
+                                                <img class="w-[110px] h-[160px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
                                                 <div class="flex flex-col justify-between">
                                                     <div>
-                                                        <p class="font-extralight text-3xl line-clamp-2 overflow-hidden overflow-ellipsis" :title="reviewBookData[rev.reviewid].title">
+                                                        <p class="font-extralight text-3xl line-clamp-1 overflow-hidden overflow-ellipsis" :title="reviewBookData[rev.reviewid].title">
                                                             {{ reviewBookData[rev.reviewid].title }}
                                                         </p>
+                                                        <p class="font-extralight">By J. K. Rowling</p>
                                                     </div>
                                                     <div>
                                                         <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
