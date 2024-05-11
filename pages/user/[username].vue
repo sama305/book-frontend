@@ -64,8 +64,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <p class="text-justify">
+                                            <div class="w-11/12">
+                                                <p class="">
                                                     <template v-if="!isEmpty(rev.content)">
                                                         "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
                                                     </template>
