@@ -6,8 +6,8 @@
     <hr>
 
     <PageBody v-if="userInfo">
-        <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: auto auto auto; grid-template-rows: auto auto;">
-            <div class="aboutme w-64">
+        <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 25% 75%; grid-template-rows: auto auto;">
+            <div class="aboutme">
                 <UCard class="h-full">
                     <div>
                         <p class="text-2xl font-semibold">About {{ userInfo.username }}...</p>
@@ -46,33 +46,33 @@
                     <p class="text-2xl font-semibold mb-2">Book Reviews</p>
                     <div v-if="reviewBookData && userReviews" class="flex flex-wrap justify-start">
                         <template v-for="(rev, i) in userReviews.slice(0, 4)">
-                            <div class="flex justify-start w-1/2 mb-4">
-                                <div>
-                                    <img :src="`https://covers.openlibrary.org/b/id/${reviewBookData[i].cover_i}-M.jpg`" style="width: 130px; height: 200px;"/>
-                                </div>
-                                <div class="flex-1 ml-2">
-                                    <div class="h-[160px] flex flex-col justify-between">
+                            <div class="w-1/2 p-4">
+                                <div class="flex justify-start mb-2">
+                                    <img class="w-[130px] h-[200px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[i].cover_i}-M.jpg`"/>
+                                    <div class="flex flex-col justify-between">
                                         <div>
-                                            <p class="font-extralight text-3xl">{{ reviewBookData[i].title }}</p>
-                                            <p class="font-extralight">By J. K. Rowling</p>
-                                            <p v-if="rev.rating >= 1">{{ getStars(rev.rating) }}</p>
+                                            <p class="font-extralight text-3xl line-clamp-2 overflow-hidden overflow-ellipsis" :title="reviewBookData[i].title">
+                                                {{ reviewBookData[i].title }}
+                                            </p>
                                         </div>
-                                        <div class="p-4">
-                                            <div v-if="!isEmpty(rev.content)" style="white-space: pre-wrap;">
-                                                "{{ rev.content }}""
-                                            </div>
-                                            <template v-else>
-                                                <i>No review provided.</i>
-                                            </template>
+                                        <div>
+                                            <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
+                                            <p v-if="rev.rating >= 1">{{ getStars(rev.rating) }}</p>
+                                            <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-right-16-solid">Full review</UButton>
                                         </div>
                                     </div>
+                                </div>
+                                <div>
+                                    <p class="text-justify font-mono">
+                                        <template v-if="!isEmpty(rev.content)">
+                                            "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
+                                        </template>
+                                    </p>
                                 </div>
                             </div>
                         </template>
                         <template v-if="userReviews && userReviews.length > 4">
-                            <UButton variant="link">
-                                See more reviews ({{ userReviews.length - 4 }} more)
-                            </UButton>
+                            <UPagination :max="5" :page-count="1" :total="5" v-model="currentPage"/>
                         </template>
                     </div>
                 </UCard>
@@ -86,10 +86,15 @@ import type { GetUserRes, GetUserReviewsRes } from '~/types';
 import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
+const booksPerPage = 4;
+const wordsPerReview = 150;
+const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
+
 const username = useRoute().params.username;
 const validated = ref(false)
 const jwtToken = useCookie('jwt_token')
 
+const currentPage = ref(1)
 const editingDesc = ref(false)
 const userDescription = ref('')
 const userReviews: Ref<GetUserReviewsRes> = ref([]);
@@ -102,22 +107,7 @@ const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
 if (userInfo) {
     userDescription.value = userInfo.description;
 
-    // get user reviews
-    userReviews.value = await $fetch(`/api/user/${userInfo.username}/reviews`, {
-        method: 'GET'
-    })
-    
-    if (userReviews.value) {
-        for (let i = 0; i < userReviews.value.length; i++) {
-        // userReviews.value.forEach(async (rev) => {
-            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`)
-            reviewBookData.value.push({
-                authors: res.authors,
-                title: res.title,
-                cover_i: res.covers[0] ?? ''
-            })
-        }
-    }
+    await getPageOfReviews(0)
 
     // validate incoming user
     if (jwtToken && jwtToken.value) {
@@ -128,10 +118,40 @@ if (userInfo) {
     }
 }
 
+watch(currentPage, async (newVal) => {
+    await getPageOfReviews(newVal - 1)
+})
+
 function getStars(rating: number) {
     rating /= 2.0
     return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating))
 }
+
+async function getPageOfReviews(page: number) {
+    // get user reviews
+    userReviews.value = await $fetch(`/api/user/${userInfo.username}/reviews`, {
+        method: 'GET',
+        params: {
+            page,
+            booksPerPage
+        }
+    })
+    
+    if (userReviews.value) {
+        for (let i = 0; i < userReviews.value.length; i++) {
+        // userReviews.value.forEach(async (rev) => {
+            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
+                method: 'GET',
+            })
+            reviewBookData.value.push({
+                authors: res.authors,
+                title: res.title,
+                cover_i: res.covers[0] ?? ''
+            })
+        }
+    }
+}
+
 </script>
 
 <style scoped>
@@ -144,6 +164,6 @@ function getStars(rating: number) {
 }
 
 .reviews {
-    grid-column-start: 2; grid-column-end: 4; grid-row-start: 1; grid-row-end: 3;
+    grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 3;
 }
 </style>
