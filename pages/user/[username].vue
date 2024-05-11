@@ -57,13 +57,13 @@
                                         </div>
                                         <div>
                                             <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
-                                            <p v-if="rev.rating >= 1">{{ getStars(rev.rating) }}</p>
+                                            <p v-if="rev.rating >= 1" class="font-extrabold">{{ getStars(rev.rating) }}</p>
                                             <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-right-16-solid">Full review</UButton>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <p class="text-justify font-mono">
+                                    <p class="text-justify">
                                         <template v-if="!isEmpty(rev.content)">
                                             "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
                                         </template>
@@ -124,7 +124,7 @@ watch(currentPage, async (newVal) => {
 
 function getStars(rating: number) {
     rating /= 2.0
-    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating))
+    return '★'.repeat(Math.floor(rating)) + ((rating - Math.floor(rating)) !== 0 ? '½' : '')
 }
 
 async function getPageOfReviews(page: number) {
