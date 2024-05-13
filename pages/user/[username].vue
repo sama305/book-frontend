@@ -6,7 +6,7 @@
     <hr>
 
     <PageBody v-if="userInfo">
-        <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 20% 75%; grid-template-rows: 320px 320px;">
+        <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 20% 75%; grid-template-rows: 232px 232px;">
             <div class="aboutme">
                 <UCard class="h-full">
                     <div>
@@ -42,14 +42,14 @@
             </div>
             <div class="reviews">
                 <UCard class="h-full">
-                    <div class="h-[620px] flex flex-col justify-between">
+                    <div class="h-[450px] flex flex-col justify-between">
                         <div class="flex flex-wrap justify-start">
                             <template v-if="userReviews">
                                 <template v-for="rev in userReviews.slice(0, 4)">
                                     <template v-if="reviewBookData && reviewBookData[rev.reviewid]">
                                         <div class="w-1/2 p-4">
                                             <div class="flex justify-start mb-2">
-                                                <img class="w-[110px] h-[160px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
+                                                <img class="w-[110px] h-[145px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
                                                 <div class="flex flex-col justify-between">
                                                     <div>
                                                         <p class="font-extralight text-3xl line-clamp-1 overflow-hidden overflow-ellipsis" :title="reviewBookData[rev.reviewid].title">
@@ -63,13 +63,6 @@
                                                         <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="w-11/12">
-                                                <p class="">
-                                                    <template v-if="!isEmpty(rev.content)">
-                                                        "{{ lorem.slice(0, wordsPerReview) + (lorem.length >= wordsPerReview ? "..." : "") }}"
-                                                    </template>
-                                                </p>
                                             </div>
                                         </div>
                                     </template>
