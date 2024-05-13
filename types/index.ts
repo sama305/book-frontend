@@ -23,6 +23,18 @@ export interface GetReviewRes {
     post_date: string,
 }
 
+export interface ReviewView {
+    username: string,
+    worksid: string,
+    reviewid: string,
+    content: string,
+    rating: number,
+    post_date: string,
+    authors: Array<string>,
+    title: string,
+    cover_i: string,
+}
+
 
 /* /login */
 export interface LoginReq {

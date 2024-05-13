@@ -46,25 +46,8 @@
                         <div class="flex flex-wrap justify-start">
                             <template v-if="userReviews">
                                 <template v-for="rev in userReviews.slice(0, 4)">
-                                    <template v-if="reviewBookData && reviewBookData[rev.reviewid]">
-                                        <div class="w-1/2 p-4">
-                                            <div class="flex justify-start mb-2">
-                                                <img class="w-[110px] h-[145px] mr-4" :src="`https://covers.openlibrary.org/b/id/${reviewBookData[rev.reviewid].cover_i}-M.jpg`"/>
-                                                <div class="flex flex-col justify-between">
-                                                    <div>
-                                                        <p class="font-extralight text-3xl line-clamp-1 overflow-hidden overflow-ellipsis" :title="reviewBookData[rev.reviewid].title">
-                                                            {{ reviewBookData[rev.reviewid].title }}
-                                                        </p>
-                                                        <p class="font-extralight">By J. K. Rowling</p>
-                                                    </div>
-                                                    <div>
-                                                        <p class="text-sm text-gray-400">{{ new Date(rev.post_date).toISOString().slice(0, 10) }}</p>
-                                                        <p v-if="rev.rating >= 1" class="font-extrabold">{{ getStars(rev.rating) }}</p>
-                                                        <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <template v-if="rev">
+                                        <BookReviewView :review="rev" />
                                     </template>
                                 </template>
                             </template>
@@ -80,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, GetUserReviewsRes, HashTable, PatchDescReq } from '~/types';
+import type { GetUserRes, ReviewView, PatchDescReq } from '~/types';
 import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
@@ -93,8 +76,7 @@ const jwtToken = useCookie('jwt_token')
 const currentPage = ref(1)
 const editingDesc = ref(false)
 const userDescription = ref('')
-const userReviews: Ref<GetUserReviewsRes> = ref([]);
-const reviewBookData: Ref<HashTable<any>> = ref({})
+const userReviews: Ref<Array<ReviewView>> = ref([]);
 
 const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
     method: 'GET'
@@ -124,11 +106,6 @@ watch(currentPage, async (newVal) => {
     await getPageOfReviews(newVal - 1)
 })
 
-function getStars(rating: number) {
-    rating /= 2.0
-    return '★'.repeat(Math.floor(rating)) + ((rating - Math.floor(rating)) !== 0 ? '½' : '')
-}
-
 async function onSaveDesc() {
     editingDesc.value = false
     await $fetch(`/api/user/${userInfo.username}/description`,
@@ -156,19 +133,15 @@ async function getPageOfReviews(page: number) {
     if (userReviews.value) {
         // reset it
         for (let i = 0; i < userReviews.value.length; i++) {
-            // if data hasn't been fetched yet, fetch it
-            const val = reviewBookData.value[userReviews.value[i].reviewid]
-            if (val === undefined) {
-                const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
-                    method: 'GET',
-                })
+            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
+                method: 'GET',
+            })
 
-                // create new entry at the review id
-                reviewBookData.value[userReviews.value[i].reviewid] = {
-                    authors: res.authors,
-                    title: res.title,
-                    cover_i: res.covers[0] ?? ''
-                }
+            userReviews.value[i] = {
+                ...userReviews.value[i],
+                authors: res.authors,
+                title: res.title,
+                cover_i: res.covers[0] + ""
             }
         }
     }
