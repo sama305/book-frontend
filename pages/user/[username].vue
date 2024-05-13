@@ -47,7 +47,13 @@
                             <template v-if="userReviews">
                                 <template v-for="rev in userReviews.slice(0, 4)">
                                     <template v-if="rev">
-                                        <BookReviewView :review="rev" />
+                                        <BookReviewView
+                                            :review="rev"
+                                            @onOpenReview="(rev) => {
+                                                viewedReview = rev
+                                                reviewModal = true
+                                            }"
+                                        />
                                     </template>
                                 </template>
                             </template>
@@ -60,6 +66,13 @@
             </div>
         </div>
     </PageBody>
+
+    <UModal v-model="reviewModal">
+        <BookReviewCard
+            :review="viewedReview!"
+            :user-info="userInfo"
+        />
+    </UModal>
 </template>
 
 <script setup lang="ts">
@@ -75,7 +88,9 @@ const jwtToken = useCookie('jwt_token')
 
 const currentPage = ref(1)
 const editingDesc = ref(false)
+const reviewModal = ref(false)
 const userDescription = ref('')
+const viewedReview: Ref<ReviewView | undefined> = ref()
 const userReviews: Ref<Array<ReviewView>> = ref([]);
 
 const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {

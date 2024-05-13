@@ -17,7 +17,7 @@
                 <div>
                     <p class="text-sm text-gray-400">{{ new Date(review.post_date).toISOString().slice(0, 10) }}</p>
                     <p v-if="review.rating >= 1" class="font-extrabold">{{ getStars(review.rating) }}</p>
-                    <UButton :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
+                    <UButton @click="$emit('onOpenReview', review)" :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
                 </div>
             </div>
         </div>
@@ -26,14 +26,10 @@
 
 <script setup lang="ts">
 import type { ReviewView } from '~/types';
+import { getStars } from '~/util';
 
 const { review } = defineProps<{
     review: ReviewView
 }>()
-
-function getStars(rating: number) {
-    rating /= 2.0
-    return '★'.repeat(Math.floor(rating)) + ((rating - Math.floor(rating)) !== 0 ? '½' : '')
-}
 
 </script>
