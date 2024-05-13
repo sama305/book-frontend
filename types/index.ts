@@ -95,6 +95,11 @@ export interface GetUserReviewsCount {
     count: number
 }
 
+/* /user/[username]/description */
+export interface PatchDescReq {
+    description: string
+}
+
 export interface HashTable<T> {
     [key: string]: T;
 }

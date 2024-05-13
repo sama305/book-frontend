@@ -24,7 +24,7 @@
 
                         <div v-else>
                             <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
-                            <UButton icon="i-heroicons-check-16-solid" @click="editingDesc = false">Save</UButton>
+                            <UButton icon="i-heroicons-check-16-solid" @click="onSaveDesc">Save</UButton>
                         </div>
                     </div>
                 </UCard>
@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, GetUserReviewsRes, HashTable } from '~/types';
+import type { GetUserRes, GetUserReviewsRes, HashTable, PatchDescReq } from '~/types';
 import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
@@ -100,7 +100,7 @@ const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
     method: 'GET'
 })
 
-const numOfReviews = await $fetch(`/api/user/${username}/reviews/count`, {
+const numOfReviews = await $fetch(`/api/user/${userInfo.username}/reviews/count`, {
     method: 'GET'
 })
 const numPages = Math.ceil(numOfReviews / booksPerPage)
@@ -127,6 +127,20 @@ watch(currentPage, async (newVal) => {
 function getStars(rating: number) {
     rating /= 2.0
     return '★'.repeat(Math.floor(rating)) + ((rating - Math.floor(rating)) !== 0 ? '½' : '')
+}
+
+async function onSaveDesc() {
+    editingDesc.value = false
+    await $fetch(`/api/user/${userInfo.username}/description`,
+    {
+        method: 'PATCH',
+        body: <PatchDescReq>{
+            description: userDescription.value
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
 }
 
 async function getPageOfReviews(page: number) {
