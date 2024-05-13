@@ -70,7 +70,7 @@
                             </template>
                         </div>
                         <div>
-                            <UPagination :max="5" :page-count="1" :total="5" v-model="currentPage"/>
+                            <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
                         </div>
                     </div>
                 </UCard>
@@ -85,8 +85,6 @@ import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
 const booksPerPage = 4;
-const wordsPerReview = 150;
-const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
 
 const username = useRoute().params.username;
 const validated = ref(false)
@@ -101,6 +99,12 @@ const reviewBookData: Ref<HashTable<any>> = ref({})
 const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
     method: 'GET'
 })
+
+const numOfReviews = await $fetch(`/api/user/${username}/reviews/count`, {
+    method: 'GET'
+})
+const numPages = Math.ceil(numOfReviews / booksPerPage)
+
 
 if (userInfo) {
     userDescription.value = userInfo.description;

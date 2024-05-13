@@ -90,6 +90,11 @@ export type GetUserReviewsRes = Array<{
     post_date: string
 }>
 
+/* /user/[username]/reviews/count */
+export interface GetUserReviewsCount {
+    count: number
+}
+
 export interface HashTable<T> {
     [key: string]: T;
 }
