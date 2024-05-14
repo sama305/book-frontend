@@ -149,15 +149,15 @@ async function getPageOfReviews(page: number) {
     if (userReviews.value) {
         // reset it
         for (let i = 0; i < userReviews.value.length; i++) {
-            const res: any = await $fetch(`https://openlibrary.org/works/${userReviews.value[i].worksid}.json`, {
+            const res: any = await $fetch(`https://www.googleapis.com/books/v1/volumes/${userReviews.value[i].worksid}`, {
                 method: 'GET',
             })
 
             userReviews.value[i] = {
                 ...userReviews.value[i],
-                authors: res.authors,
-                title: res.title,
-                cover_i: res.covers[0] + ""
+                authors: res.volumeInfo.authors,
+                title: res.volumeInfo.title,
+                cover: res.volumeInfo.imageLinks.thumbnail
             }
         }
     }

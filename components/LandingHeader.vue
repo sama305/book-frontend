@@ -40,8 +40,8 @@ const JWTtoken = useCookie('jwt_token')
 
 const emit = defineEmits(['search'])
 
-watch(searchQuery, (oldVal, _) => {
-    emit('search', oldVal)
+watch(searchQuery, (newVal, _) => {
+    emit('search', newVal)
 })
 
 const ops = [

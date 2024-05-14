@@ -2,9 +2,12 @@
     <UCard>
         <template #header>
             <div class="flex justify-between">
-                <p class="text-3xl font-extralight">
-                    {{ review.title }} review
-                </p>
+                <div>
+                    <p class="text-3xl font-extralight italic">
+                        {{ review.title }}
+                    </p>
+                    <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
+                </div>
                 <template v-if="validated">
                     <UDropdown :items="reviewOptions" :popper="{ placement: 'bottom-start' }">
                         <UButton color="black" size="sm" square icon="i-heroicons-ellipsis-horizontal-16-solid" variant="link" />
@@ -25,7 +28,7 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
 import type { GetUserRes, ReviewView } from '~/types';
-import { getStars } from '~/util';
+import { formatArrAsSentence, getStars } from '~/util';
 
 const emit = defineEmits(['deleteReview'])
 

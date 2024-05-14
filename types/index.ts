@@ -32,7 +32,7 @@ export interface ReviewView {
     post_date: string,
     authors: Array<string>,
     title: string,
-    cover_i: string,
+    cover: string,
 }
 
 

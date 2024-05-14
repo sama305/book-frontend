@@ -12,7 +12,10 @@
                 <div class="grid grid-cols-4 grid-rows-1 w-fit">
                     <div v-for="r in pagedResults[currentPage]" class="relative">
                         <div @click="selectedReviewBook = r" class="book-img-container h-[190px] w-[120px]">
-                            <img class="pointer-events-none book-img h-full w-full" :src="r.cover" />
+                            <div class="book-img pointer-events-none h-full w-full relative">
+                                <img class="h-full w-full" :src="r.cover" />
+                                <p class="shadow-black text-white book-img-title p-4 text-xl italic font-extralight absolute top-0 left-0">{{ r.title }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,7 +124,7 @@ async function postReview() {
         body: <PostReviewReq>{
             content: reviewContent.value,
             rating: reviewStars.value,
-            worksid: selectedReviewBook.value?.key.slice(7)
+            worksid: selectedReviewBook.value.volumeid
         }
     })
     emit('postReview', res.reviewid)
@@ -134,7 +137,12 @@ async function postReview() {
     opacity: 50%;
 }
 
-.book-img-container .book-img {
+.book-img-title {
+    opacity: 0%;
+    transition: opacity 0.3s ease;
+}
+
+.book-img {
     transition: transform 0.3s ease;
 }
 
@@ -142,6 +150,12 @@ async function postReview() {
     transform: scale(1.5);
     position: relative;
     z-index: 1000;
+    box-shadow: 0px 0px 25px;
+}
+
+.book-img-container:hover .book-img-title {
+    opacity: 100%;
+    text-shadow: 3px 3px 5px #000000;
 }
 
 /* .book {
