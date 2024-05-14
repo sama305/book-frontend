@@ -71,6 +71,7 @@
         <BookReviewCard
             :review="viewedReview!"
             :user-info="userInfo"
+            @delete-review="onDeleteReview"
         />
     </UModal>
 </template>
@@ -160,6 +161,11 @@ async function getPageOfReviews(page: number) {
             }
         }
     }
+}
+
+async function onDeleteReview() {
+    reviewModal.value = false
+    await getPageOfReviews(currentPage.value)
 }
 
 </script>

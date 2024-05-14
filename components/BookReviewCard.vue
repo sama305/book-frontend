@@ -27,6 +27,16 @@ import { jwtDecode } from 'jwt-decode';
 import type { GetUserRes, ReviewView } from '~/types';
 import { getStars } from '~/util';
 
+const emit = defineEmits(['deleteReview'])
+
+const { review, userInfo } = defineProps<{
+    review: ReviewView,
+    userInfo: GetUserRes
+}>()
+
+const validated = ref(false)
+const jwtToken = useCookie('jwt_token')
+
 const reviewOptions = [
     [
         {
@@ -42,17 +52,18 @@ const reviewOptions = [
         {
             label: 'Delete this review',
             icon: 'i-heroicons-x-circle-16-solid',
+            click: async () => {
+                await $fetch(`/api/review/${review.reviewid}`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${jwtToken.value}`
+                    }
+                })
+                emit('deleteReview')
+            }
         }
     ]
 ]
-
-const { review, userInfo } = defineProps<{
-    review: ReviewView,
-    userInfo: GetUserRes
-}>()
-
-const validated = ref(false)
-const jwtToken = useCookie('jwt_token')
 
 // validate incoming user
 if (jwtToken && jwtToken.value) {
