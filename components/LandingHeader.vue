@@ -47,7 +47,7 @@ watch(searchQuery, (oldVal, _) => {
 const ops = [
     [
         {
-            label: 'Navigate to profile',
+            label: 'Profile',
             icon: 'i-heroicons-user-circle-16-solid',
             click: async () => {
                 if (JWTtoken.value) {
