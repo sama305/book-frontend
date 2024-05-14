@@ -33,7 +33,7 @@
                     <div class="ml-4 flex flex-col justify-between">
                         <div>
                             <p class="text-2xl font-light">{{ selectedReviewBook.title }}</p>
-                            <p>By {{ selectedReviewBook.authors }}</p>
+                            <p>By {{ formatArrAsSentence(selectedReviewBook.authors) }}</p>
                         </div>
                         <div>
                             <UButton
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { debounce } from 'vue-debounce'
 import { type BookSearchInfo, type PostReviewReq, type PostReviewRes } from "~/types"
-import { isEmpty } from '~/util';
+import { isEmpty, formatArrAsSentence } from '~/util';
 
 const emit = defineEmits(['postReview'])
 
