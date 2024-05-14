@@ -2,7 +2,9 @@
     <div class="w-1/2 p-4">
         <div class="flex justify-start mb-2">
             <template v-if="review.cover_i">
-                <img class="w-[110px] h-[145px] mr-4" :src="`https://covers.openlibrary.org/b/id/${review.cover_i}-M.jpg`"/>
+                <div class="w-[90px] h-[145px] min-w-[90px] min-h-[145px] mr-4">
+                    <img width="110" height="145" class="w-full h-full" :src="`https://covers.openlibrary.org/b/id/${review.cover_i}-M.jpg`"/>
+                </div>
             </template>
             <template v-else>
                 <USkeleton class="w-[110px] h-[145px] mr-4" />

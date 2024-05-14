@@ -13,10 +13,10 @@
                         <template v-if="!editingDesc">
                             <div class="flex items-center justify-between" style="white-space: pre-wrap;">
                                 <template v-if="!isEmpty(userDescription)">
-                                    <i>{{ userDescription }}</i>
+                                    {{ userDescription }}
                                 </template>
                                 <template v-else>
-                                    <i>'{{ userInfo.username }}' hasn't written a profile description yet.</i>
+                                    {{ userInfo.username }} hasn't written a profile description yet.
                                 </template>
                                 <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
