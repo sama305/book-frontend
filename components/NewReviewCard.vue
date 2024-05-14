@@ -7,29 +7,33 @@
             padded
             v-model="rawSearchInput"
         />
-        <div class="h-72 mb-4">
+        <div class="h-52 mb-4">
             <template v-if="selectedReviewBook === undefined">
-                <div>
-                    <UCarousel v-slot="{ item }" :items="results">
-                        <div @click="selectedReviewBook = item" style="transition: opacity 0.8s ease; position: relative;" :class="isLoading ? 'loading' : ''" class="flex book">
-                            <img width="200" class="book-img" :src="`https://covers.openlibrary.org/b/id/${item.cover_i}-M.jpg`" />
-                            <p class="book-title text-2xl text-white" style="text-shadow: 2px 2px 12px #000000; width: 200px; position: absolute; top: 10px; left: 10px">{{ item.title }}</p>
+                <div class="grid grid-cols-4 grid-rows-1 w-fit">
+                    <div v-for="r in pagedResults[currentPage]" class="relative">
+                        <div @click="selectedReviewBook = r" class="book-img-container h-[190px] w-[120px]">
+                            <img class="pointer-events-none book-img h-full w-full" :src="r.cover" />
                         </div>
-                    </UCarousel>
+                    </div>
                 </div>
+                <template v-if="pagedResults.length > 0">
+                    <UButton size="sm" class="p-0" :disabled="currentPage === 0" @click="currentPage--" variant="link">Previous</UButton>
+                    |
+                    <UButton size="sm" class="p-0" @click="currentPage++" variant="link">Next</UButton>
+                </template>
                 <template v-if="isLoading">
                     <div class="absolute top-0 left-0 h-3/4 w-full m-auto flex justify-center">
-                        <UIcon size="20px" class="self-center" dynamic name="svg-spinners:bars-rotate-fade"/>
+                        <UIcon size="20px" class="self-center" dynamic name="svg-spinners:3-dots-scale"/>
                     </div>
                 </template>
             </template>
             <template v-else>
                 <div class="flex">
-                    <img class="book" style="float: left" :src="`https://covers.openlibrary.org/b/id/${selectedReviewBook.cover_i}-M.jpg`" />
+                    <img class="book" style="float: left" :src="selectedReviewBook.cover" />
                     <div class="ml-4 flex flex-col justify-between">
                         <div>
                             <p class="text-2xl font-light">{{ selectedReviewBook.title }}</p>
-                            <p>By {{ selectedReviewBook.author_name }}</p>
+                            <p>By {{ selectedReviewBook.authors }}</p>
                         </div>
                         <div>
                             <UButton
@@ -57,6 +61,7 @@
 <script setup lang="ts">
 import { debounce } from 'vue-debounce'
 import { type BookSearchInfo, type PostReviewReq, type PostReviewRes } from "~/types"
+import { isEmpty } from '~/util';
 
 const emit = defineEmits(['postReview'])
 
@@ -68,19 +73,29 @@ const rawSearchInput = ref('')
 const reviewContent = ref('')
 const reviewStars = ref(0)
 
-watch(rawSearchInput, debounce(async () => {
-    try {
-        const res: {
-            results: Array<BookSearchInfo>,
-            numFound: number,
-        } = await $fetch('/api/search/query', {
-            method: 'POST',
-            body: {
-                query: rawSearchInput.value
-            }
-        })
+const isLoading = computed(() => searchQuery.value != rawSearchInput.value)
 
-        results.value = res.results
+const selectedReviewBook: Ref<any | undefined> = ref(undefined)
+const results: Ref<Array<any>> = ref([])
+const pagedResults: Ref<Array<any>> = ref([])
+const resultsPerPage = 4;
+const currentPage = ref(0)
+
+watch(rawSearchInput, debounce(async (newVal: string) => {
+    try {
+        if (!isEmpty(newVal)) {
+            const res = await $fetch('/api/search/query', {
+                method: 'POST',
+                body: {
+                    query: newVal
+                }
+            })
+
+            results.value = res
+            for (let i = 0; i < Math.ceil(res.length / resultsPerPage); i++) {
+                pagedResults.value[i] = results.value.splice(i*resultsPerPage, i*resultsPerPage+resultsPerPage)
+            }
+        }
     }
     catch(e: any) {
         console.error(e)
@@ -90,13 +105,8 @@ watch(rawSearchInput, debounce(async () => {
         })
     }
 
-    searchQuery.value = rawSearchInput.value
+    searchQuery.value = newVal
 }, 400))
-
-const isLoading = computed(() => searchQuery.value != rawSearchInput.value)
-
-const selectedReviewBook: Ref<BookSearchInfo | undefined> = ref(undefined)
-const results: Ref<Array<BookSearchInfo>> = ref([])
     
 function canPostReview(book: BookSearchInfo | undefined) {
     return book !== undefined
@@ -124,28 +134,21 @@ async function postReview() {
     opacity: 50%;
 }
 
-.book-img:hover {
-    opacity: 75%;
+.book-img-container .book-img {
+    transition: transform 0.3s ease;
 }
 
-.book-img {
-    transition: opacity 0.4s ease;
+.book-img-container:hover .book-img {
+    transform: scale(1.5);
+    position: relative;
+    z-index: 1000;
 }
 
-.book-title {
-    transition: opacity 0.4s ease;
-    opacity: 0%;
-}
-
-.book-img:hover ~ .book-title {
-    opacity: 100%;
-}
-
-.book {
+/* .book {
     max-height: 300px;
     min-height: 300px;
     max-width: 200px;
     min-width: 200px;
-}
+} */
 
 </style>

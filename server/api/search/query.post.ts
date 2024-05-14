@@ -1,27 +1,32 @@
 import { BookSearchInfo } from "~/types";
 
-const baseUrl = 'https://openlibrary.org/search.json'
+const baseUrl = 'https://www.googleapis.com/books/v1/volumes'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const query = body.query.split('').map((c: string) => { 
         if (c == ' ') {
-            return "%20"
+            return "+"
         }
         else {
             return c.toLowerCase()
         }
     }).join('')
 
-    const res: any = await $fetch(`${baseUrl}?q=${query}&fields=key,author_key,author_name,first_publish_year,title,cover_edition_key,cover_i&limit=6`, {
+    const res: any = await $fetch(`${baseUrl}?q=${query}`, {
         method: 'GET'
     })
 
-    const results = (res.docs as Array<BookSearchInfo>).filter(b => b.cover_i !== undefined)
+    const results = (res.items as Array<any>).map((b: any) => {
+        return {
+            link: b.selfLink,
+            title: b.volumeInfo.title,
+            authors: b.volumeInfo.authors,
+            volumeid: b.id,
+            cover: b.volumeInfo.imageLinks.thumbnail
+        }
+    })
     
-    return {
-        results,
-        numFound: res.numFound,
-    }
+    return results
 })
