@@ -1,7 +1,7 @@
 <template>
     <UCard>
         <template #header>
-            <div class="flex justify-between">
+            <div class="flex justify-between items-start">
                 <div>
                     <p class="text-3xl font-extralight italic">
                         {{ review.title }}
@@ -9,7 +9,7 @@
                     <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
                 </div>
                 <template v-if="validated">
-                    <UDropdown :items="reviewOptions" :popper="{ placement: 'bottom-start' }">
+                    <UDropdown :items="reviewOptions" :popper="{ offsetDistance: 0, placement: 'bottom-start' }">
                         <UButton color="black" size="sm" square icon="i-heroicons-ellipsis-horizontal-16-solid" variant="link" />
                     </UDropdown>
                 </template>
