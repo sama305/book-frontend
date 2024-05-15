@@ -2,14 +2,25 @@
     <div class="w-1/2 p-4">
         <div class="flex justify-start mb-2">
             <div class="w-[90px] h-[145px] min-w-[90px] min-h-[145px] mr-4">
-                <img width="110" height="145" class="w-full h-full" :src="review.cover"/>
+                <template v-if="review.cover">
+                    <img width="110" height="145" class="w-full h-full" :src="review.cover" />
+                </template>
+                <template v-else>
+                    <USkeleton class="w-full h-full" />
+                </template>
             </div>
             <div class="flex flex-col justify-between">
                 <div>
-                    <p class="font-extralight text-3xl line-clamp-1 italic overflow-hidden overflow-ellipsis" :title="review.title">
-                        {{ review.title }}
+                    <p class="font-extralight text-3xl h-10 line-clamp-1 italic overflow-hidden overflow-ellipsis" :title="review.title">
+                        <template v-if="review.title">
+                            {{ review.title }}
+                        </template>
+                        <USkeleton v-else class="h-full w-full">das</USkeleton>
                     </p>
-                    <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
+                    <template v-if="review.authors">
+                        <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
+                    </template>
+                    <USkeleton v-else class="h-full w-full" />
                 </div>
                 <div>
                     <p class="text-sm text-gray-400">{{ new Date(review.post_date).toISOString().slice(0, 10) }}</p>

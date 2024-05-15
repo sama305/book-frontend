@@ -8,7 +8,7 @@ export function getStars(rating: number) {
 }
 
 export function formatArrAsSentence(arr: Array<any>) {
-    if (arr.length === 0) {
+    if (!arr || arr.length === 0) {
         return ''
     }
     else if (arr.length === 1) {

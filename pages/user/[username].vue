@@ -45,7 +45,7 @@
                     <div class="h-[450px] flex flex-col justify-between">
                         <div class="flex flex-wrap justify-start">
                             <template v-if="userReviews">
-                                <template v-for="rev in userReviews.slice(0, 4)">
+                                <template v-for="rev in userReviews">
                                     <template v-if="rev">
                                         <BookReviewView
                                             :review="rev"
@@ -91,8 +91,8 @@ const currentPage = ref(1)
 const editingDesc = ref(false)
 const reviewModal = ref(false)
 const userDescription = ref('')
-const viewedReview: Ref<ReviewView | undefined> = ref()
-const userReviews: Ref<Array<ReviewView>> = ref([]);
+const viewedReview: Ref<any | undefined> = ref()
+const userReviews: Ref<Array<any>> = ref([]);
 
 const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
     method: 'GET'
@@ -146,24 +146,22 @@ async function getPageOfReviews(page: number) {
         }
     })
     
-    if (userReviews.value) {
         // reset it
-        for (let i = 0; i < userReviews.value.length; i++) {
-            const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
-                method: 'GET',
-            })
+    for (let i = 0; i < userReviews.value.length; i++) {
+        const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
+            method: 'GET',
+        })
 
-            userReviews.value[i] = {
-                ...userReviews.value[i],
-                ...res
-            }
+        userReviews.value[i] = {
+            ...userReviews.value[i],
+            ...res
         }
     }
 }
 
 async function onDeleteReview() {
     reviewModal.value = false
-    await getPageOfReviews(currentPage.value)
+    await getPageOfReviews(currentPage.value - 1)
 }
 
 </script>

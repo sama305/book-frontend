@@ -53,7 +53,9 @@
         </div>
         <div class="h-full">
             <p class="text-s font-thin">Stars (<i>optional</i>)</p>
-            <StarRating @select-star="(s) => { reviewStars = s }" />
+            <div class="w-fit m-auto">
+                <StarRating @select-star="(s) => { reviewStars = s }" />
+            </div>
             <p class="text-s font-thin">Review body (<i>optional</i>)</p>
             <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." v-model="reviewContent" />
             <UButton icon="i-heroicons-check-16-solid" :disabled="!canPostReview(selectedReviewBook)" @click="postReview">Post Review</UButton>
