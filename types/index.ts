@@ -18,14 +18,14 @@ export interface GetReviewRes {
     content: string,
     rating: number,
     username: string,
-    worksid: string,
+    volumeid: string,
     reviewid: string,
     post_date: string,
 }
 
 export interface ReviewView {
     username: string,
-    worksid: string,
+    volumeid: string,
     reviewid: string,
     content: string,
     rating: number,
@@ -74,7 +74,7 @@ export interface GetUserRes {
 export interface PostReviewReq {
     content: string,
     rating: number,
-    worksid: string,
+    volumeid: string,
 }
 
 export interface PostReviewRes {
@@ -104,7 +104,7 @@ export interface PutReviewRes {
 /* /user/[username]/reviews */
 export type GetUserReviewsRes = Array<{
     username: string
-    worksid: string
+    volumeid: string
     reviewid: string
     content: string
     rating: number

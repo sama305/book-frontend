@@ -14,7 +14,7 @@
                         <div @click="selectedReviewBook = r" class="book-img-container h-[190px] w-[120px]">
                             <div class="book-img pointer-events-none h-full w-full relative">
                                 <img class="h-full w-full" :src="r.cover" />
-                                <p class="shadow-black text-white book-img-title p-4 text-xl italic font-extralight absolute top-0 left-0">{{ r.title }}</p>
+                                <p class="text-white book-img-title p-4 text-xl italic font-light absolute top-0 left-0">{{ r.title }}</p>
                             </div>
                         </div>
                     </div>
@@ -126,7 +126,7 @@ async function postReview() {
         body: <PostReviewReq>{
             content: reviewContent.value,
             rating: reviewStars.value,
-            worksid: selectedReviewBook.value.volumeid
+            volumeid: selectedReviewBook.value.volumeid
         }
     })
     emit('postReview', res.reviewid)
@@ -145,19 +145,19 @@ async function postReview() {
 }
 
 .book-img {
-    transition: transform 0.3s ease;
+    transition: transform 0.1s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
 .book-img-container:hover .book-img {
-    transform: scale(1.5);
+    transform: perspective(400px) rotateY(20deg) scale(1.5);
     position: relative;
     z-index: 1000;
-    box-shadow: 0px 0px 25px;
+    /* box-shadow: 0px 0px 50px; */
 }
 
 .book-img-container:hover .book-img-title {
     opacity: 100%;
-    text-shadow: 3px 3px 5px #000000;
+    text-shadow: 1px 1px 2px #000000;
 }
 
 /* .book {

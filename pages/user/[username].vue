@@ -147,9 +147,9 @@ async function getPageOfReviews(page: number) {
         }
     })
     
-        // reset it
+    // reset it
     for (let i = 0; i < userReviews.value.length; i++) {
-        const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
+        const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
             method: 'GET',
         })
 
@@ -171,7 +171,7 @@ async function onUpdateReview(reviewid: string) {
         method: 'GET'
     })
 
-    const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
+    const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
         method: 'GET',
     })
 
