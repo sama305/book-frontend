@@ -112,6 +112,18 @@ export interface PatchDescReq {
     description: string
 }
 
+/* /volume/[volumeid] */
+export interface GetVolumeRes {
+    authors: Array<string>,
+    title: string,
+    cover: string,
+    pageCount: string,
+    publishedYear: string,
+    description: string
+}
+
+
+
 export interface HashTable<T> {
     [key: string]: T;
 }

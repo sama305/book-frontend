@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, ReviewView, PatchDescReq } from '~/types';
+import type { GetUserRes, ReviewView, PatchDescReq, GetVolumeRes } from '~/types';
 import { isEmpty } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
@@ -149,15 +149,13 @@ async function getPageOfReviews(page: number) {
     if (userReviews.value) {
         // reset it
         for (let i = 0; i < userReviews.value.length; i++) {
-            const res: any = await $fetch(`https://www.googleapis.com/books/v1/volumes/${userReviews.value[i].worksid}`, {
+            const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
                 method: 'GET',
             })
 
             userReviews.value[i] = {
                 ...userReviews.value[i],
-                authors: res.volumeInfo.authors,
-                title: res.volumeInfo.title,
-                cover: res.volumeInfo.imageLinks.thumbnail
+                ...res
             }
         }
     }
