@@ -92,6 +92,15 @@ export interface DeleteReviewReq {
     token: string,
 }
 
+export interface PutReviewReq {
+    content: string,
+    rating: number
+}
+
+export interface PutReviewRes {
+    status: number
+}
+
 /* /user/[username]/reviews */
 export type GetUserReviewsRes = Array<{
     username: string

@@ -16,9 +16,13 @@
             </div>
         </template>
         <p v-if="review.rating >= 1" class="font-extrabold">{{ getStars(review.rating) }}</p>
-        <p class="mb-4">
-            {{ review.content }}
+        <p class="mb-4" v-if="!editingContent && !isEmpty(reviewContent)">
+            {{ reviewContent }}
         </p>
+        <div class="mb-4" v-else-if="editingContent">
+            <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." v-model="reviewContent" />
+            <UButton icon="i-heroicons-check-16-solid" @click="updateReview">Update Content</UButton>
+        </div>
         <p class="text-sm text-gray-400">
             Posted by {{ userInfo.username}} on {{ new Date(review.post_date).toISOString().slice(0, 10) }}
         </p>
@@ -27,8 +31,8 @@
 
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
-import type { GetUserRes, ReviewView } from '~/types';
-import { formatArrAsSentence, getStars } from '~/util';
+import type { GetUserRes, ReviewView, PutReviewReq } from '~/types';
+import { formatArrAsSentence, getStars, isEmpty } from '~/util';
 
 const emit = defineEmits(['deleteReview'])
 
@@ -40,11 +44,19 @@ const { review, userInfo } = defineProps<{
 const validated = ref(false)
 const jwtToken = useCookie('jwt_token')
 
+const editingContent = ref(false)
+const reviewContent  = ref(review.content)
+const editingRating  = ref(false)
+const reviewRating  = ref(review.rating)
+
 const reviewOptions = [
     [
         {
             label: 'Edit content',
-            icon: 'i-heroicons-pencil-16-solid'
+            icon: 'i-heroicons-pencil-16-solid',
+            click: () => {
+                editingContent.value = true
+            }
         },
         {
             label: 'Change rating',
@@ -74,6 +86,20 @@ if (jwtToken && jwtToken.value) {
     if (decoded.username === userInfo.username) {
         validated.value = true
     }
+}
+
+async function updateReview() {
+    editingContent.value = false
+    const res = await $fetch(`/api/review/${review.reviewid}`, {
+        method: 'PUT',
+        body: <PutReviewReq>{
+            content: reviewContent.value,
+            rating: reviewRating.value
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
 }
 
 </script>
