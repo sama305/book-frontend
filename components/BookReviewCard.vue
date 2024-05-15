@@ -15,7 +15,7 @@
                 </template>
             </div>
         </template>
-        <p v-if="review.rating >= 1" class="font-extrabold">{{ getStars(review.rating) }}</p>
+        <p v-if="review.rating >= 1" class="font-extrabold mb-2">{{ getStars(review.rating) }}</p>
         <p class="mb-4" v-if="!editingContent && !isEmpty(reviewContent)">
             {{ reviewContent }}
         </p>

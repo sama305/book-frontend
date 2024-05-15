@@ -5,9 +5,7 @@
                 <template v-if="review.cover">
                     <img width="110" height="145" class="w-full h-full" :src="review.cover" />
                 </template>
-                <template v-else>
-                    <USkeleton class="w-full h-full" />
-                </template>
+                <USkeleton v-else class="w-full h-full" />
             </div>
             <div class="flex flex-col justify-between">
                 <div>
