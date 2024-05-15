@@ -34,7 +34,7 @@ import { jwtDecode } from 'jwt-decode';
 import type { GetUserRes, ReviewView, PutReviewReq } from '~/types';
 import { formatArrAsSentence, getStars, isEmpty } from '~/util';
 
-const emit = defineEmits(['deleteReview'])
+const emit = defineEmits(['deleteReview', 'updateReview'])
 
 const { review, userInfo } = defineProps<{
     review: ReviewView,
@@ -100,6 +100,7 @@ async function updateReview() {
             "Authorization": `Bearer ${jwtToken.value}`
         }
     })
+    emit('updateReview', review.reviewid)
 }
 
 </script>

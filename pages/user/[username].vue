@@ -72,6 +72,7 @@
             :review="viewedReview!"
             :user-info="userInfo"
             @delete-review="onDeleteReview"
+            @update-review="onUpdateReview"
         />
     </UModal>
 </template>
@@ -162,6 +163,22 @@ async function getPageOfReviews(page: number) {
 async function onDeleteReview() {
     reviewModal.value = false
     await getPageOfReviews(currentPage.value - 1)
+}
+
+async function onUpdateReview(reviewid: string) {
+    const i = userReviews.value.findIndex(r => r.reviewid === reviewid)
+    userReviews.value[i] = await $fetch(`/api/review/${reviewid}`, {
+        method: 'GET'
+    })
+
+    const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].worksid}`, {
+        method: 'GET',
+    })
+
+    userReviews.value[i] = {
+        ...userReviews.value[i],
+        ...res
+    }
 }
 
 </script>
