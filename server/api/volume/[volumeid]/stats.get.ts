@@ -1,18 +1,20 @@
-import { GetUserReviewsRes } from "~/types"
-
-const baseUrl = 'https://www.googleapis.com/books/v1/volumes'
-
 export default defineEventHandler(async (event) => {
     const volumeid = getRouterParam(event, 'volumeid')
+    const config = useRuntimeConfig()
 	
     try {
         // todo!!! implement type for this
-        const res: any = await $fetch(`${baseUrl}/${volumeid}/stats`, {
+        const res: {
+            avgrating: number,
+            reviewcount: number,
+            volumeid: string
+        } = await $fetch(`${config.public.backendBaseURL}/volume/${volumeid}/stats`, {
             method: "GET",
         })
         return res
     }
     catch (e: any) {
+        console.log(e)
         throw createError(e)
 	}
 })

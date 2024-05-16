@@ -16,7 +16,7 @@
                             <p class="mb-4 text-xl font-extralight">By {{ formatArrAsSentence(bookInfo.authors) }}</p>
                         </div>
                         <div>
-                            <p class="text-5xl font-extralight mb-4">★ 3.56</p>
+                            <p class="text-5xl font-extralight mb-4">★ {{ (bookStats.avgrating / 2).toFixed(2) }}</p>
                         </div>
                     </div>
                     <UCard>
@@ -31,12 +31,12 @@
             </div>
             <div>
                 <UCard>
-                    <div class="mb-4 grid grid-cols-2 gap-12">
+                    <div class="mb-16 grid grid-cols-2 gap-12">
                         <template v-for="rev in reviews">
                             <UserReviewView :review="rev"/>
                         </template>
                     </div>
-                    <UPagination />
+                    <UPagination  :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
                 </UCard>
             </div>
         </div>
@@ -51,11 +51,12 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import type { GetReviewRes } from '~/types';
 import { formatArrAsSentence } from '~/util';
 
 const volumeid = useRoute().params.volumeid
 const descModal = ref(false)
+const currentPage = ref(1)
+const reviewsPerPage = 4
 
 const bookInfo = await $fetch(`/api/volume/${volumeid}`, {
     method: 'GET'
@@ -64,6 +65,12 @@ const bookInfo = await $fetch(`/api/volume/${volumeid}`, {
 const reviews = await $fetch(`/api/volume/${volumeid}/reviews`, {
     method: 'GET'
 })
+
+const bookStats = await $fetch(`/api/volume/${volumeid}/stats`, {
+    method: 'GET'
+})
+
+const numPages = Math.ceil(bookStats.reviewcount / reviewsPerPage)
 
 function showDesc() {
     descModal.value = true

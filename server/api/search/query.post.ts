@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
         }
     }).join('')
 
+    console.log(query)
     const res: any = await $fetch(`${baseUrl}?q=${query}`, {
         method: 'GET'
     })
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
             title: b.volumeInfo.title,
             authors: b.volumeInfo.authors,
             volumeid: b.id,
-            cover: b.volumeInfo.imageLinks.thumbnail
+            cover: b.volumeInfo.imageLinks?.thumbnail
         }
     })
     
