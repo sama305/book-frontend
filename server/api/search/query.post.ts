@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
         }
     }).join('')
 
-    console.log(query)
     const res: any = await $fetch(`${baseUrl}?q=${query}`, {
         method: 'GET'
     })
