@@ -24,7 +24,7 @@
             <UButton icon="i-heroicons-check-16-solid" @click="updateReview">Update Content</UButton>
         </div>
         <p class="text-sm text-gray-400">
-            Posted by {{ userInfo.username}} on {{ new Date(review.post_date).toISOString().slice(0, 10) }}
+            Posted by {{ userInfo.username}} on {{ strToDate(review.post_date) }}
         </p>
     </UCard>
 </template>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
 import type { GetUserRes, ReviewView, PutReviewReq } from '~/types';
-import { formatArrAsSentence, getStars, isEmpty } from '~/util';
+import { formatArrAsSentence, getStars, isEmpty, strToDate } from '~/util';
 
 const emit = defineEmits(['deleteReview', 'updateReview'])
 

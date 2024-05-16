@@ -31,7 +31,7 @@
             </div>
             <div class="other">
                 <UCard class="h-full">
-                    <p>Joined {{ new Date(userInfo.join_date).toISOString().slice(0,10) }}</p>
+                    <p>Joined {{ strToDate(userInfo.join_date) }}</p>
                     <UButton variant="ghost">
                         <div class="flex items-center">
                             <UIcon class="mr-2" name="i-heroicons-envelope" />
@@ -79,7 +79,7 @@
 
 <script setup lang="ts">
 import type { GetUserRes, ReviewView, PatchDescReq, GetVolumeRes } from '~/types';
-import { isEmpty } from '~/util';
+import { isEmpty, strToDate } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
 const booksPerPage = 4;

@@ -131,6 +131,8 @@ export interface GetVolumeRes {
     description: string
 }
 
+/* /volume/[volumeid]/reviews */
+export type GetVolumeReviewsRes = Array<GetUserReviewsRes>
 
 
 export interface HashTable<T> {

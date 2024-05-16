@@ -13,7 +13,7 @@
                         <template v-if="review.title">
                             {{ review.title }}
                         </template>
-                        <USkeleton v-else class="h-full w-full">das</USkeleton>
+                        <USkeleton v-else class="h-full w-full"></USkeleton>
                     </p>
                     <template v-if="review.authors">
                         <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
@@ -21,7 +21,7 @@
                     <USkeleton v-else class="h-full w-full" />
                 </div>
                 <div>
-                    <p class="text-sm text-gray-400">{{ new Date(review.post_date).toISOString().slice(0, 10) }}</p>
+                    <p class="text-sm text-gray-400">{{ strToDate(review.post_date) }}</p>
                     <p v-if="review.rating >= 1" class="font-extrabold">{{ getStars(review.rating) }}</p>
                     <UButton @click="$emit('onOpenReview', review)" :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
                 </div>
@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import type { ReviewView } from '~/types';
-import { formatArrAsSentence, getStars } from '~/util';
+import { formatArrAsSentence, getStars, strToDate } from '~/util';
 
 const { review } = defineProps<{
     review: ReviewView

@@ -29,3 +29,13 @@ export function formatArrAsSentence(arr: Array<any>) {
         return out
     }
 }
+
+const ops: Intl.DateTimeFormatOptions = {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+}
+
+export function strToDate(s: string) {
+    return new Date(s).toLocaleDateString('en-US', ops)
+}

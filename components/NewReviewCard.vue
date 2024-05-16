@@ -152,19 +152,11 @@ async function postReview() {
     transform: perspective(400px) rotateY(20deg) scale(1.5);
     position: relative;
     z-index: 1000;
-    /* box-shadow: 0px 0px 50px; */
 }
 
 .book-img-container:hover .book-img-title {
     opacity: 100%;
     text-shadow: 1px 1px 2px #000000;
 }
-
-/* .book {
-    max-height: 300px;
-    min-height: 300px;
-    max-width: 200px;
-    min-width: 200px;
-} */
 
 </style>
