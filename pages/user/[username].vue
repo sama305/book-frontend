@@ -6,63 +6,65 @@
     <hr>
 
     <PageBody v-if="userInfo">
-        <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 20% 75%; grid-template-rows: 232px 232px;">
-            <div class="aboutme">
-                <UCard class="h-full">
-                    <div>
-                        <template v-if="!editingDesc">
-                            <div class="flex items-center justify-between" style="white-space: pre-wrap;">
-                                <template v-if="!isEmpty(userDescription)">
-                                    {{ userDescription }}
-                                </template>
-                                <template v-else>
-                                    {{ userInfo.username }} hasn't written a profile description yet.
-                                </template>
-                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
-                            </div>
-                        </template>
+        <div class="w-4/5 m-auto">
+            <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 20% 75%; grid-template-rows: auto auto;">
+                <div class="aboutme">
+                    <UCard class="h-full">
+                        <div>
+                            <template v-if="!editingDesc">
+                                <div class="flex items-center justify-between" style="white-space: pre-wrap;">
+                                    <template v-if="!isEmpty(userDescription)">
+                                        {{ userDescription }}
+                                    </template>
+                                    <template v-else>
+                                        {{ userInfo.username }} hasn't written a profile description yet.
+                                    </template>
+                                    <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
+                                </div>
+                            </template>
 
-                        <div v-else>
-                            <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
-                            <UButton icon="i-heroicons-check-16-solid" @click="onSaveDesc">Save</UButton>
+                            <div v-else>
+                                <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
+                                <UButton icon="i-heroicons-check-16-solid" @click="onSaveDesc">Save</UButton>
+                            </div>
                         </div>
-                    </div>
-                </UCard>
-            </div>
-            <div class="other">
-                <UCard class="h-full">
-                    <p>Joined {{ strToDate(userInfo.join_date) }}</p>
-                    <UButton variant="ghost">
-                        <div class="flex items-center">
-                            <UIcon class="mr-2" name="i-heroicons-envelope" />
-                            <p>{{ userInfo.email }}</p>
-                        </div>
-                    </UButton>
-                </UCard>
-            </div>
-            <div class="reviews">
-                <UCard class="h-full">
-                    <div class="h-[450px] flex flex-col justify-between">
-                        <div class="flex flex-wrap justify-start">
-                            <template v-if="userReviews">
-                                <template v-for="rev in userReviews">
-                                    <template v-if="rev">
-                                        <BookReviewView
-                                            :review="rev"
-                                            @onOpenReview="(rev) => {
-                                                viewedReview = rev
-                                                reviewModal = true
-                                            }"
-                                        />
+                    </UCard>
+                </div>
+                <div class="other">
+                    <UCard class="h-full">
+                        <p>Joined {{ strToDate(userInfo.join_date) }}</p>
+                        <UButton variant="ghost">
+                            <div class="flex items-center">
+                                <UIcon class="mr-2" name="i-heroicons-envelope" />
+                                <p>{{ userInfo.email }}</p>
+                            </div>
+                        </UButton>
+                    </UCard>
+                </div>
+                <div class="reviews">
+                    <UCard class="h-full">
+                        <div class="flex flex-col justify-between">
+                            <div class="flex flex-wrap justify-start mb-4">
+                                <template v-if="userReviews">
+                                    <template v-for="rev in userReviews">
+                                        <template v-if="rev">
+                                            <BookReviewView
+                                                :review="rev"
+                                                @onOpenReview="(rev) => {
+                                                    viewedReview = rev
+                                                    reviewModal = true
+                                                }"
+                                            />
+                                        </template>
                                     </template>
                                 </template>
-                            </template>
+                            </div>
+                            <div>
+                                <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
+                            </div>
                         </div>
-                        <div>
-                            <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
-                        </div>
-                    </div>
-                </UCard>
+                    </UCard>
+                </div>
             </div>
         </div>
     </PageBody>
@@ -78,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, ReviewView, PatchDescReq, GetVolumeRes } from '~/types';
+import type { GetUserRes, PatchDescReq, GetVolumeRes } from '~/types';
 import { isEmpty, strToDate } from '~/util';
 import { jwtDecode } from "jwt-decode"
 

@@ -27,6 +27,14 @@
                 </div>
             </div>
         </div>
+        <p class="h-16 font-extralight line-clamp-3">
+            <template v-if="review.content">
+                "{{ review.content }}"
+            </template>
+            <template v-else>
+                No review given.
+            </template>
+        </p>
     </div>
 </template>
 
