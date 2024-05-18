@@ -7,8 +7,8 @@
 
     <PageBody v-if="userInfo">
         <div class="w-4/5 m-auto">
-            <div class="grid" style="height: 50vh; gap: 30px; grid-template-columns: 20% 75%; grid-template-rows: auto auto;">
-                <div class="aboutme">
+            <div class="grid lg:h-[50vh] lg:gap-[30px] md:gap-[15px] lg:grid-cols-[20%_75%] md:grid-cols lg:grid-rows-2">
+                <div class="lg:row-start-1 lg:row-end-2 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2">
                     <UCard class="h-full">
                         <div>
                             <template v-if="!editingDesc">
@@ -30,8 +30,8 @@
                         </div>
                     </UCard>
                 </div>
-                <div class="other">
-                    <UCard class="h-full">
+                <div class="lg:row-start-2 lg:row-end-3 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3">
+                    <UCard class="md:h-full lg:h-fit">
                         <p>Joined {{ strToDate(userInfo.join_date) }}</p>
                         <UButton variant="ghost">
                             <div class="flex items-center">
@@ -41,15 +41,16 @@
                         </UButton>
                     </UCard>
                 </div>
-                <div class="reviews">
+                <div class="h-fit lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3">
                     <UCard class="h-full">
-                        <div class="flex flex-col justify-between">
+                        <div class="h-full flex flex-col justify-between">
                             <div class="flex flex-wrap justify-start mb-4">
                                 <template v-if="userReviews">
                                     <template v-for="rev in userReviews">
                                         <template v-if="rev">
                                             <BookReviewView
                                                 :review="rev"
+                                                class="md:w-1/2 sm:w-full"
                                                 @onOpenReview="(rev) => {
                                                     viewedReview = rev
                                                     reviewModal = true
@@ -186,17 +187,3 @@ async function onUpdateReview(reviewid: string) {
 }
 
 </script>
-
-<style scoped>
-.aboutme {
-    grid-column-start: 1; grid-column-end: 2; grid-row-start: 1; grid-row-end: 2;
-}
-
-.other {
-    grid-column-start: 1; grid-column-end: 2; grid-row-start: 2; grid-row-end: 3;
-}
-
-.reviews {
-    grid-column-start: 2; grid-column-end: 3; grid-row-start: 1; grid-row-end: 3;
-}
-</style>
