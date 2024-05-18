@@ -139,6 +139,7 @@ async function onSaveDesc() {
 
 async function getPageOfReviews(page: number) {
     // get user reviews
+    userReviews.value = []
     userReviews.value = await $fetch(`/api/user/${userInfo.username}/reviews`, {
         method: 'GET',
         params: {
@@ -146,16 +147,17 @@ async function getPageOfReviews(page: number) {
             booksPerPage
         }
     })
-    
     // reset it
-    for (let i = 0; i < userReviews.value.length; i++) {
-        const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
-            method: 'GET',
-        })
+    if (userReviews.value) {
+        for (let i = 0; i < userReviews.value.length; i++) {
+            const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
+                method: 'GET',
+            })
 
-        userReviews.value[i] = {
-            ...userReviews.value[i],
-            ...res
+            userReviews.value[i] = {
+                ...userReviews.value[i],
+                ...res
+            }
         }
     }
 }
