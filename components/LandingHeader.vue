@@ -1,6 +1,8 @@
 <template>
     <div>
-        <p class="inline-block text-3xl mr-8" style="user-select: none; cursor: pointer;" @click="navigateTo('/')">Books.com</p>
+        <p class="flex items-center text-3xl mr-8 font-serif" style="user-select: none; cursor: pointer;" @click="navigateTo('/')">
+            <UIcon class="mr-2" dynamic name="mdi:castle" /> Bookdom
+        </p>
     </div>
     <div class="flex content-start">
         <template v-if="JWTtoken">
