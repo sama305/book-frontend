@@ -101,6 +101,16 @@ export interface PutReviewRes {
     status: number
 }
 
+/* /review/[reviewid]/comments */
+export type GetReviewCommentsRes = Array<{
+    content: string,
+    username: string,
+    commentid: string,
+    reviewid: string,
+    post_date: string,
+    likecount: string,
+}>
+
 /* /user/[username]/reviews */
 export type GetUserReviewsRes = Array<{
     username: string
