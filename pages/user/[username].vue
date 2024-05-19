@@ -1,6 +1,6 @@
 <template>
     <PageHeader>
-        <LandingHeader />
+        <LandingHeader @post-review="refetchReviews" />
     </PageHeader>
 
     <hr>
@@ -41,7 +41,7 @@
                         </UButton>
                     </UCard>
                 </div>
-                <div class="h-fit lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3">
+                <div class="h-fit min-h-96 lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3">
                     <UCard class="h-full">
                         <div class="h-full flex flex-col justify-between">
                             <div class="flex flex-wrap justify-start mb-4">
@@ -52,6 +52,7 @@
                                                 :review="rev"
                                                 class="md:w-1/2 sm:w-full"
                                                 @onOpenReview="navigateTo(`/review/${rev.reviewid}`)"
+                                                @delete-review="refetchReviews"
                                             />
                                         </template>
                                     </template>
@@ -66,15 +67,6 @@
             </div>
         </div>
     </PageBody>
-
-    <UModal v-model="reviewModal">
-        <BookReviewCard
-            :review="viewedReview!"
-            :user-info="userInfo"
-            @delete-review="onDeleteReview"
-            @update-review="onUpdateReview"
-        />
-    </UModal>
 </template>
 
 <script setup lang="ts">
@@ -90,9 +82,7 @@ const jwtToken = useCookie('jwt_token')
 
 const currentPage = ref(1)
 const editingDesc = ref(false)
-const reviewModal = ref(false)
 const userDescription = ref('')
-const viewedReview: Ref<any | undefined> = ref()
 const userReviews: Ref<Array<any>> = ref([]);
 
 const userInfo = await $fetch(`/api/user/${username}`, {
@@ -163,8 +153,7 @@ async function getPageOfReviews(page: number) {
     }
 }
 
-async function onDeleteReview() {
-    reviewModal.value = false
+async function refetchReviews() {
     await getPageOfReviews(currentPage.value - 1)
 }
 

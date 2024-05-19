@@ -38,7 +38,7 @@ const newReviewModal = ref(false)
 const toast = useToast()
 const JWTtoken = useCookie('jwt_token')
 
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search', 'postReview'])
 
 watch(searchQuery, (newVal, _) => {
     emit('search', newVal)
@@ -77,7 +77,7 @@ const ops = [
 
 async function login(username: string, password: string) {
     try {
-        const res: SignupRes = await $fetch('/api/login', {
+        const res = await $fetch('/api/login', {
             method: 'POST',
             body: <UserCredentials>{
                 username: username,
@@ -111,8 +111,9 @@ async function login(username: string, password: string) {
 function onPostReview(reviewId: string) {
     newReviewModal.value = false
     toast.add({
-        title: `New review ${reviewId} added.`,
+        title: `New review added.`,
     })
+    emit('postReview')
 }
 
 async function logout() {
