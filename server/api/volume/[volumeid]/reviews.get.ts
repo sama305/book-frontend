@@ -3,6 +3,7 @@ import { GetVolumeReviewsRes } from "~/types"
 export default defineEventHandler(async (event) => {
     const volumeid = getRouterParam(event, 'volumeid')
     const config = useRuntimeConfig()
+    const queries: { page: number, reviewsPerPage: number } = await getQuery(event)
 	
     try {
         const res: GetVolumeReviewsRes = await $fetch(`${config.public.backendBaseURL}/volume/${volumeid}/reviews`, {
@@ -10,8 +11,8 @@ export default defineEventHandler(async (event) => {
             query: {
                 sort_order: "post_date",
                 sort_dir: "ascending",
-                page: 0,
-                amount: 4,
+                page: queries.page,
+                amount: queries.reviewsPerPage,
             }
         })
         return res

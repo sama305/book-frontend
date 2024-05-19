@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import type { GetVolumeReviewsRes } from '~/types';
 import { formatArrAsSentence } from '~/util';
 
 const volumeid = useRoute().params.volumeid
@@ -68,9 +69,8 @@ const bookInfo = await $fetch(`/api/volume/${volumeid}`, {
     method: 'GET'
 })
 
-const reviews = await $fetch(`/api/volume/${volumeid}/reviews`, {
-    method: 'GET'
-})
+const reviews: Ref<GetVolumeReviewsRes> = ref([])
+await getPageOfReviews(0)
 
 const bookStats = await $fetch(`/api/volume/${volumeid}/stats`, {
     method: 'GET'
@@ -78,8 +78,26 @@ const bookStats = await $fetch(`/api/volume/${volumeid}/stats`, {
 
 const numPages = Math.ceil(bookStats.reviewcount / reviewsPerPage)
 
+
+watch(currentPage, async (newVal) => {
+    await getPageOfReviews(newVal - 1)
+})
+
 function showDesc() {
     descModal.value = true
+}
+
+async function getPageOfReviews(page: number) {
+    // get user reviews
+    reviews.value = []
+    const res = await $fetch(`/api/volume/${volumeid}/reviews`, {
+        method: 'GET',
+        params: {
+            page,
+            reviewsPerPage
+        }
+    })
+    reviews.value = res
 }
 
 </script>
