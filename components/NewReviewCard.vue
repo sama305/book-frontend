@@ -14,7 +14,10 @@
                         <div @click="selectedReviewBook = r" class="book-img-container h-[190px] w-[120px]">
                             <div class="book-img pointer-events-none h-full w-full relative">
                                 <img class="shadow-md rounded h-full w-full" :src="r.cover" />
-                                <p class="text-white book-img-title p-4 text-xl italic font-light absolute top-0 left-0">{{ r.title }}</p>
+                                <div class="absolute top-0 left-0 flex h-full justify-between flex-col">
+                                    <p class="text-white book-img-title pl-4 pr-4 pt-2 text-xl italic font-light line-clamp-4">{{ r.title }}</p>
+                                    <p class="text-white book-img-title pl-4 pr-4 pb-2 text-xs font-light"> By {{ formatArrAsSentence(r.authors) }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -145,13 +148,21 @@ async function postReview() {
 }
 
 .book-img {
-    transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1);
+    transition: transform 0.5s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.book-img img {
+    transition: filter 0.2s ease;
 }
 
 .book-img-container:hover .book-img {
-    transform: perspective(400px) rotateY(20deg) scale(1.5);
+    transform: perspective(400px) rotateZ(5deg) scale(2);
     position: relative;
     z-index: 1000;
+}
+
+.book-img-container:hover .book-img img {
+    filter: brightness(30%);
 }
 
 .book-img-container:hover .book-img-title {
