@@ -13,5 +13,8 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'light'
   },
-  modules: ["@nuxt/ui"]
+  modules: ["@nuxt/ui"],
+  ui: {
+    icons: ['mdi', 'heroicons']
+  }
 })
