@@ -113,6 +113,10 @@ export interface CommentInfo {
 
 export type GetReviewCommentsRes = Array<CommentInfo>
 
+export interface PostReviewCommentReq {
+    content: string,
+}
+
 /* /user/[username]/reviews */
 export type GetUserReviewsRes = Array<{
     username: string

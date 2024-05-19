@@ -40,10 +40,12 @@
                         </div>
                     </div>
                     <div class="flex md:items-center md:flex-row flex-col">
-                        <UTextarea class="w-full md:mr-4 mb-4 md:mb-0" placeholder="Write a comment..." />
+                        <UTextarea class="w-full md:mr-4 mb-4 md:mb-0" placeholder="Write a comment..." v-model="commentBody" />
                         <UButton
                             class="p-2 w-fit h-fit"
                             icon="i-heroicons-chat-bubble-left-right-16-solid"
+                            @click="postComment"
+                            :disabled="isEmpty(commentBody)"
                         >
                             Post Comment
                         </UButton>
@@ -65,14 +67,15 @@
 </template>
 
 <script setup lang="ts">
-import { getStars } from '~/util';
-import { type GetReviewCommentsRes } from '~/types'
+import { getStars, isEmpty } from '~/util';
+import type { GetReviewCommentsRes, PostReviewCommentReq } from '~/types'
 
 const reviewid = useRoute().params.reviewid
+const jwtToken = useCookie('jwt_token')
 
-const addingNewComment = ref(false)
+const commentBody = ref('')
 const currentPage = ref(1)
-const commentsPerPage = 3
+const commentsPerPage = 12
 
 const reviewInfo = await $fetch(`/api/review/${reviewid}`, {
     method: 'GET'
@@ -99,6 +102,20 @@ async function getPageOfComments(page: number) {
     })
 
     comments.value = res
+}
+
+async function postComment() {
+    await $fetch(`/api/review/${reviewInfo.reviewid}/comments`, {
+        method: 'POST',
+        body: <PostReviewCommentReq>{
+            content: commentBody.value
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+    await getPageOfComments(currentPage.value - 1)
+    commentBody.value = ''
 }
 
 </script>
