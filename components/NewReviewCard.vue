@@ -55,7 +55,7 @@
             </template>
         </div>
         <div class="h-full">
-            <p class="text-s font-thin">Stars (<i>optional</i>)</p>
+            <p class="text-s font-thin">Rating (<i>optional</i>)</p>
             <div class="w-fit m-auto">
                 <StarRating @select-star="(s) => { reviewStars = s }" />
             </div>
