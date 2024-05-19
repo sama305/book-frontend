@@ -16,10 +16,5 @@ export default defineNuxtConfig({
   modules: ["@nuxt/ui"],
   ui: {
     icons: ['mdi', 'heroicons']
-  },
-  nitro: {
-    devServer: {
-      watch: [ './' ]
-    }
   }
 })
