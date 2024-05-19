@@ -2,31 +2,37 @@
     <PageHeader>
         <LandingHeader />
     </PageHeader>
+
     <hr>
+    
     <PageBody>
         <div class="w-4/5 m-auto">
             <div class="h-80 flex items-center mb-4">
-                <div class="h-full max-w-[250px] min-w-[250px] mr-8">
-                    <img class="w-full h-full" :src="bookInfo.cover" />
+                <div class=" h-full max-w-[200px] min-w-[200px] mr-8">
+                    <img class="shadow-md rounded-xl w-full h-full" :src="bookInfo.cover" />
                 </div>
-                <div>
+                <div class="w-full">
                     <div class="flex justify-between items-center">
                         <div>
-                            <p class="text-4xl font-extralight italic">{{ bookInfo.title }}</p>
-                            <p class="mb-4 text-xl font-extralight">By {{ formatArrAsSentence(bookInfo.authors) }}</p>
+                            <div>
+                                <p class="text-4xl font-extralight italic">{{ bookInfo.title }}</p>
+                                <p class="mb-4 text-xl font-extralight">By {{ formatArrAsSentence(bookInfo.authors) }}</p>
+                            </div>
                         </div>
-                        <div>
+                        <div class="w-1/2 flex justify-center">
                             <p class="text-5xl font-extralight mb-4">★ {{ (bookStats.avgrating / 2).toFixed(2) }}</p>
                         </div>
                     </div>
-                    <UCard>
-                        <p class="mb-4 font-light line-clamp-5" v-html="bookInfo.description"></p>
-                        <template v-if="bookInfo.description.length > 400">
-                            <UButton @click="showDesc" variant="link" class="p-0">
-                                Show More
-                            </UButton>
-                        </template>
-                    </UCard>
+                    <template v-if="bookInfo.description">
+                        <UCard>
+                            <p class="mb-4 font-light line-clamp-5" v-html="bookInfo.description"></p>
+                            <template v-if="bookInfo.description.length > 400">
+                                <UButton @click="showDesc" variant="link" class="p-0">
+                                    Show More
+                                </UButton>
+                            </template>
+                        </UCard>
+                    </template>
                 </div>
             </div>
             <div>

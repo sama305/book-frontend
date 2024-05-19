@@ -51,10 +51,7 @@
                                             <BookReviewView
                                                 :review="rev"
                                                 class="md:w-1/2 sm:w-full"
-                                                @onOpenReview="(rev) => {
-                                                    viewedReview = rev
-                                                    reviewModal = true
-                                                }"
+                                                @onOpenReview="navigateTo(`/review/${rev.reviewid}`)"
                                             />
                                         </template>
                                     </template>
@@ -98,7 +95,7 @@ const userDescription = ref('')
 const viewedReview: Ref<any | undefined> = ref()
 const userReviews: Ref<Array<any>> = ref([]);
 
-const userInfo: GetUserRes = await $fetch(`/api/user/${username}`, {
+const userInfo = await $fetch(`/api/user/${username}`, {
     method: 'GET'
 })
 
@@ -143,17 +140,18 @@ async function onSaveDesc() {
 async function getPageOfReviews(page: number) {
     // get user reviews
     userReviews.value = []
-    userReviews.value = await $fetch(`/api/user/${userInfo.username}/reviews`, {
+    const res = await $fetch(`/api/user/${userInfo.username}/reviews`, {
         method: 'GET',
         params: {
             page,
             booksPerPage
         }
     })
+    userReviews.value = res
     // reset it
     if (userReviews.value) {
         for (let i = 0; i < userReviews.value.length; i++) {
-            const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
+            const res = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
                 method: 'GET',
             })
 
@@ -176,7 +174,7 @@ async function onUpdateReview(reviewid: string) {
         method: 'GET'
     })
 
-    const res: GetVolumeRes = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
+    const res = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
         method: 'GET',
     })
 

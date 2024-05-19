@@ -3,7 +3,7 @@
         <div class="flex justify-start mb-2">
             <div class="w-[90px] h-[145px] min-w-[90px] min-h-[145px] mr-4">
                 <template v-if="review.cover">
-                    <img @click="onClickCover" width="110" height="145" class="w-full h-full" :src="review.cover" />
+                    <img @click="onClickCover" width="110" height="145" class="shadow-md rounded w-full h-full" :src="review.cover" />
                 </template>
                 <USkeleton v-else class="w-full h-full" />
             </div>

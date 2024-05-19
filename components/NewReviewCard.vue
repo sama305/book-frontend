@@ -13,7 +13,7 @@
                     <div v-for="r in pagedResults[currentPage]" class="relative">
                         <div @click="selectedReviewBook = r" class="book-img-container h-[190px] w-[120px]">
                             <div class="book-img pointer-events-none h-full w-full relative">
-                                <img class="h-full w-full" :src="r.cover" />
+                                <img class="shadow-md rounded h-full w-full" :src="r.cover" />
                                 <p class="text-white book-img-title p-4 text-xl italic font-light absolute top-0 left-0">{{ r.title }}</p>
                             </div>
                         </div>
@@ -118,7 +118,7 @@ function canPostReview(book: BookSearchInfo | undefined) {
 }
 
 async function postReview() {
-    const res: PostReviewRes = await $fetch('/api/review', {
+    const res = await $fetch('/api/review', {
         method: 'POST',
         headers: {
             "Authorization": `Bearer ${jwtToken.value}`
@@ -145,7 +145,7 @@ async function postReview() {
 }
 
 .book-img {
-    transition: transform 0.1s cubic-bezier(0.215, 0.610, 0.355, 1);
+    transition: transform 0.3s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
 .book-img-container:hover .book-img {
@@ -157,6 +157,7 @@ async function postReview() {
 .book-img-container:hover .book-img-title {
     opacity: 100%;
     text-shadow: 1px 1px 2px #000000;
+    filter: brightness(100%);
 }
 
 </style>
