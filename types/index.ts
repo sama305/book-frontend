@@ -127,9 +127,10 @@ export type GetUserReviewsRes = Array<{
     post_date: string
 }>
 
-/* /user/[username]/reviews/count */
-export interface GetUserReviewsCount {
-    count: number
+/* /user/[username]/reviews/stats */
+export interface GetUserReviewsStatsRes {
+    avgrating: number,
+    reviewcount: number
 }
 
 /* /user/[username]/description */
@@ -145,6 +146,12 @@ export interface GetVolumeRes {
     pageCount: string,
     publishedYear: string,
     description: string
+}
+
+/* /volume/[volumeid]/stats */
+export interface GetVolumeStatsRes {
+    avgrating: number,
+    reviewcount: number,
 }
 
 /* /volume/[volumeid]/reviews */

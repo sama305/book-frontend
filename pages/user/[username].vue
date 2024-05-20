@@ -89,10 +89,10 @@ const userInfo = await $fetch(`/api/user/${username}`, {
     method: 'GET'
 })
 
-const numOfReviews = await $fetch(`/api/user/${userInfo.username}/reviews/count`, {
+const reviewInfo = await $fetch(`/api/user/${userInfo.username}/reviews/stats`, {
     method: 'GET'
 })
-const numPages = Math.ceil(numOfReviews / booksPerPage)
+const numPages = Math.ceil(reviewInfo.reviewcount / booksPerPage)
 
 
 if (userInfo) {
