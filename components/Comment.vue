@@ -11,8 +11,8 @@
                         <p class="text-gray-400">{{ strToDate(comment.post_date) }}</p>
                     </div>
                 </div>
-                <div class="flex flex-col items-center">
-                    <UButton variant="link" color="black">
+                <div v-if="!isEmpty(currentUsername)" class="flex flex-col items-center">
+                    <UButton @click="likeComment" variant="link" color="black">
                         <UIcon dynamic size="25" name="mdi:cards-heart-outline" />
                     </UButton>
                     <p>{{ comment.likecount }}</p>
@@ -28,11 +28,36 @@
 </template>
 
 <script setup lang="ts">
+import { jwtDecode } from 'jwt-decode';
 import type { CommentInfo } from '~/types';
-import { strToDate } from '~/util';
+import { isEmpty, strToDate } from '~/util';
+
+const emit = defineEmits(['like'])
 
 const { comment } = defineProps<{
     comment: CommentInfo
 }>()
+
+const jwtToken = useCookie('jwt_token')
+const currentUsername = ref('')
+
+// validate incoming user
+if (jwtToken && jwtToken.value) {
+    const decoded: any = jwtDecode(jwtToken.value)
+    if (decoded.username) {
+        currentUsername.value = decoded.username
+    }
+}
+
+async function likeComment() {
+    await $fetch(`/api/comment/${comment.commentid}/likes` ,{
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+    comment.likecount += 1;
+    emit('like', comment.commentid)
+}
 
 </script>
