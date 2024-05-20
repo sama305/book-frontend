@@ -6,7 +6,7 @@
     <hr>
     <PageBody>
         <div class="w-4/5 m-auto">
-            <div class="w-full mb-4">
+            <div class="w-full mb-16">
                 <!-- <div class="flex flex-col-reverse"> -->
                     <!-- <div class="flex mb-4">
                         <ProfilePicture class="mr-2" :username="reviewInfo.username" />
@@ -18,7 +18,7 @@
                 <!-- </div> -->
                 <div>
                     <div class="h-full w-fit m-auto">
-                        <div class="mr-8">
+                        <div class="flex justify-between">
                             <div class="flex mb-4">
                                 <div class="mr-4 lg:h-full lg:max-w-[90px] lg:min-w-[90px]">
                                     <a :href="`/book/${reviewInfo.volumeid}`">
@@ -26,19 +26,30 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <div class="flex items-center">
-                                        <ProfilePicture class="mr-2" :username="reviewInfo.username" />
-                                        <div>
-                                            <p>Reviewed by <a :href="`/user/${reviewInfo.username}`">{{ reviewInfo.username }}</a></p>
-                                            <p class="text-lg font-extralight">{{ getStars(reviewInfo.rating) }}</p>
-                                            <p class="text-gray-400">{{ strToDate(reviewInfo.post_date) }}</p>
-                                        </div>
-                                    </div>
                                     <div class="mb-2">
                                         <p class="text-3xl font-extralight"><i>{{ bookInfo.title }}</i></p>
                                         <p>By {{ formatArrAsSentence(bookInfo.authors) }}</p>
                                     </div>
+                                    <div class="flex items-center">
+                                        <ProfilePicture class="mr-2" :username="reviewInfo.username" />
+                                        <div>
+                                            <p class="text-lg font-extralight">{{ getStars(reviewInfo.rating) }}</p>
+                                            <p class="text-gray-400">{{ strToDate(reviewInfo.post_date) }}</p>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="flex flex-col ml-8">
+                                <UTextarea class="w-64  " placeholder="Write a comment..." v-model="commentBody" />
+                                <UButton
+                                    class="p-2 w-fit h-fit"
+                                    icon="i-heroicons-chat-bubble-left-right-16-solid"
+                                    @click="postComment"
+                                    variant="link"
+                                    :disabled="isEmpty(commentBody)"
+                                >
+                                    Post Comment
+                                </UButton>
                             </div>
                         </div>
                         <div class="flex">
@@ -49,17 +60,6 @@
                                         {{ reviewInfo.content }}  <UIcon size="20" dynamic name="mdi:format-quote-close"/>
                                     </p>
                                 </div>
-                            </div>
-                            <div class="flex flex-col ml-8">
-                                <UTextarea class="w-64 mb-4" placeholder="Write a comment..." v-model="commentBody" />
-                                <UButton
-                                    class="p-2 w-fit h-fit"
-                                    icon="i-heroicons-chat-bubble-left-right-16-solid"
-                                    @click="postComment"
-                                    :disabled="isEmpty(commentBody)"
-                                >
-                                    Post Comment
-                                </UButton>
                             </div>
                         </div>
                     </div>
