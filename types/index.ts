@@ -114,6 +114,7 @@ export interface CommentInfo {
     reviewid: string,
     post_date: string,
     likecount: string,
+    isliked: boolean
 }
 
 export type GetReviewCommentsRes = Array<CommentInfo>
@@ -129,7 +130,8 @@ export type GetUserReviewsRes = Array<{
     reviewid: string
     content: string
     rating: number
-    post_date: string
+    post_date: string,
+    isliked: boolean
 }>
 
 /* /user/[username]/reviews/stats */

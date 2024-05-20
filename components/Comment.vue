@@ -11,7 +11,7 @@
                 </div>
                 <div v-if="!isEmpty(currentUsername)" class="flex flex-col items-center">
                     <UButton @click="likeComment" variant="link" color="black">
-                        <UIcon dynamic size="25" name="mdi:cards-heart-outline" />
+                        <UIcon dynamic size="25" :name="comment.isliked ? `mdi:cards-heart` : `mdi:cards-heart-outline`" />
                     </UButton>
                     <p>{{ comment.likecount }}</p>
                 </div>

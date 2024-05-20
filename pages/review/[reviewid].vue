@@ -7,22 +7,13 @@
     <PageBody>
         <div class="w-4/5 m-auto">
             <div class="w-full mb-16">
-                <!-- <div class="flex flex-col-reverse"> -->
-                    <!-- <div class="flex mb-4">
-                        <ProfilePicture class="mr-2" :username="reviewInfo.username" />
-                        <div>
-                            <p class="">Review by {{ reviewInfo.username }}</p>
-                            <p class="text-lg font-extralight">{{ getStars(reviewInfo.rating) }}</p>
-                        </div>
-                    </div> -->
-                <!-- </div> -->
                 <div>
                     <div class="h-full w-fit m-auto">
                         <div class="flex justify-between">
                             <div class="flex mb-4">
-                                <div class="mr-4 lg:h-full lg:max-w-[90px] lg:min-w-[90px]">
+                                <div class="mr-4 h-[160px] max-w-[100px] min-w-[100px]">
                                     <a :href="`/book/${reviewInfo.volumeid}`">
-                                        <img class="shadow-md rounded-xl w-full h-full" :src="bookInfo.cover" />
+                                        <img class="shadow-md rounded-md w-full h-full" :src="bookInfo.cover" />
                                     </a>
                                 </div>
                                 <div>
@@ -40,7 +31,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col ml-8">
-                                <UTextarea class="w-64  " placeholder="Write a comment..." v-model="commentBody" />
+                                <UTextarea class="w-64" placeholder="Write a comment..." v-model="commentBody" />
                                 <UButton
                                     class="p-2 w-fit h-fit"
                                     icon="i-heroicons-chat-bubble-left-right-16-solid"
@@ -54,7 +45,7 @@
                         </div>
                         <div class="flex">
                             <div class="flex">
-                                <UIcon class="min-w-[30px]" size="20" dynamic name="mdi:format-quote-open"/>
+                                <UIcon class="min-w-[20px]" size="20" dynamic name="mdi:format-quote-open"/>
                                 <div class="p-2">
                                     <p class="text-lg font-light">
                                         {{ reviewInfo.content }}  <UIcon size="20" dynamic name="mdi:format-quote-close"/>
@@ -113,9 +104,12 @@ async function getPageOfComments(page: number) {
         query: {
             page,
             commentsPerPage
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
-
+    
     comments.value = res
 
     await calcNumPages()

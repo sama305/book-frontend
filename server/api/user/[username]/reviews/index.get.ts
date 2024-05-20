@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
     const queries: { page: number, booksPerPage: number } = await getQuery(event)
 	
     try {
-        console.log()
         const res: GetUserReviewsRes = await $fetch(`${config.public.backendBaseURL}/user/${username}/reviews`, {
             method: "GET",
             query: {

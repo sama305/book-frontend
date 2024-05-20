@@ -11,7 +11,6 @@ export default defineEventHandler(async (event) => {
         return res
     }
     catch (e: any) {
-        console.log(e)
         throw createError(e)
 	}
 })
