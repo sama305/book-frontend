@@ -6,49 +6,62 @@
     <hr>
     <PageBody>
         <div class="w-4/5 m-auto">
-            <div class="min-h-80 w-full flex mb-4 items-start">
-                <div class="h-0 w-0 lg:h-full lg:max-w-[200px] lg:min-w-[200px] lg:mr-8">
-                    <img class="shadow-md rounded-xl w-full h-full" :src="bookInfo.cover" />
-                </div>
-                <div class="flex flex-col justify-between h-full w-full">
-                    <div class="h-full">
-                        <div class="flex lg:flex-row flex-col lg:justify-between lg:items-center">
-                            <div class="flex">
-                                <div class="mr-4 min-h-16 max-h-16 min-w-16 max-w-16 bg-red-600" style="border-radius: 100%;"></div>
+            <div class="w-full mb-4">
+                <!-- <div class="flex flex-col-reverse"> -->
+                    <!-- <div class="flex mb-4">
+                        <ProfilePicture class="mr-2" :username="reviewInfo.username" />
+                        <div>
+                            <p class="">Review by {{ reviewInfo.username }}</p>
+                            <p class="text-lg font-extralight">{{ getStars(reviewInfo.rating) }}</p>
+                        </div>
+                    </div> -->
+                <!-- </div> -->
+                <div>
+                    <div class="h-full w-fit m-auto">
+                        <div class="mr-8">
+                            <div class="flex mb-4">
+                                <div class="mr-4 lg:h-full lg:max-w-[90px] lg:min-w-[90px]">
+                                    <a :href="`/book/${reviewInfo.volumeid}`">
+                                        <img class="shadow-md rounded-xl w-full h-full" :src="bookInfo.cover" />
+                                    </a>
+                                </div>
                                 <div>
-                                    <p class="text-4xl font-extralight"><i>{{ bookInfo.title }}</i> review</p>
-                                    <p class="mb-4 text-xl font-extralight">By <UButton
-                                        class="p-0 text-xl"
-                                        variant="link"
-                                        @click="navigateTo(`/user/${reviewInfo.username}`)">
-                                            {{ reviewInfo.username }}
-                                        </UButton>
+                                    <div class="flex items-center">
+                                        <ProfilePicture class="mr-2" :username="reviewInfo.username" />
+                                        <div>
+                                            <p>Reviewed by <a :href="`/user/${reviewInfo.username}`">{{ reviewInfo.username }}</a></p>
+                                            <p class="text-lg font-extralight">{{ getStars(reviewInfo.rating) }}</p>
+                                            <p class="text-gray-400">{{ strToDate(reviewInfo.post_date) }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <p class="text-3xl font-extralight"><i>{{ bookInfo.title }}</i></p>
+                                        <p>By {{ formatArrAsSentence(bookInfo.authors) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex">
+                                <UIcon class="min-w-[30px]" size="20" dynamic name="mdi:format-quote-open"/>
+                                <div class="p-2">
+                                    <p class="text-lg font-light">
+                                        {{ reviewInfo.content }}  <UIcon size="20" dynamic name="mdi:format-quote-close"/>
                                     </p>
                                 </div>
                             </div>
-                            <div>
-                                <p class="text-5xl font-extralight mb-4">{{ getStars(reviewInfo.rating) }}</p>
+                            <div class="flex flex-col ml-8">
+                                <UTextarea class="w-64 mb-4" placeholder="Write a comment..." v-model="commentBody" />
+                                <UButton
+                                    class="p-2 w-fit h-fit"
+                                    icon="i-heroicons-chat-bubble-left-right-16-solid"
+                                    @click="postComment"
+                                    :disabled="isEmpty(commentBody)"
+                                >
+                                    Post Comment
+                                </UButton>
                             </div>
                         </div>
-                        <div class="flex mb-8">
-                            <UIcon class="min-w-[30px]" size="20" dynamic name="mdi:format-quote-open"/>
-                            <div class="p-2">
-                                <p class="text-lg font-light">
-                                    {{ reviewInfo.content }}  <UIcon size="20" dynamic name="mdi:format-quote-close"/>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex md:items-center md:flex-row flex-col">
-                        <UTextarea class="w-full md:mr-4 mb-4 md:mb-0" placeholder="Write a comment..." v-model="commentBody" />
-                        <UButton
-                            class="p-2 w-fit h-fit"
-                            icon="i-heroicons-chat-bubble-left-right-16-solid"
-                            @click="postComment"
-                            :disabled="isEmpty(commentBody)"
-                        >
-                            Post Comment
-                        </UButton>
                     </div>
                 </div>
             </div>
@@ -67,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { getStars, isEmpty } from '~/util';
+import { formatArrAsSentence, getStars, isEmpty, strToDate } from '~/util';
 import type { GetReviewCommentsRes, PostReviewCommentReq } from '~/types'
 
 const reviewid = useRoute().params.reviewid
