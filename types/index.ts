@@ -101,6 +101,11 @@ export interface PutReviewRes {
     status: number
 }
 
+/* /review/[reviewid]/stats */
+export interface GetReviewStatsRes {
+    commentcount: number
+}
+
 /* /review/[reviewid]/comments */
 export interface CommentInfo {
     content: string,

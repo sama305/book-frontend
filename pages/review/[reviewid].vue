@@ -72,7 +72,7 @@
                             <Comment class="mb-4" :comment="c" />
                         </template>
                     </div>
-                    <UPagination :max="5" :page-count="1" :total="5" v-model="currentPage" />
+                    <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
                 </UCard>
             </div>
         </div>
@@ -90,6 +90,7 @@ const commentBody = ref('')
 const currentPage = ref(1)
 const commentsPerPage = 12
 
+
 const reviewInfo = await $fetch(`/api/review/${reviewid}`, {
     method: 'GET'
 })
@@ -97,6 +98,7 @@ const bookInfo = await $fetch(`/api/volume/${reviewInfo.volumeid}`, {
     method: 'GET'
 })
 
+const numPages = ref(1)
 const comments: Ref<GetReviewCommentsRes> = ref([])
 await getPageOfComments(0)
 
@@ -115,6 +117,8 @@ async function getPageOfComments(page: number) {
     })
 
     comments.value = res
+
+    await calcNumPages()
 }
 
 async function postComment() {
@@ -129,6 +133,13 @@ async function postComment() {
     })
     await getPageOfComments(currentPage.value - 1)
     commentBody.value = ''
+}
+
+async function calcNumPages() {
+    const stats = await $fetch(`/api/review/${reviewid}/stats`, {
+        method: 'GET'
+    })
+    numPages.value = Math.ceil(stats.commentcount / 12)
 }
 
 </script>
