@@ -113,7 +113,7 @@ export interface CommentInfo {
     commentid: string,
     reviewid: string,
     post_date: string,
-    likecount: string,
+    likecount: number,
     isliked: boolean
 }
 

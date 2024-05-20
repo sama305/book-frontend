@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import type { GetReviewRes } from '~/types';
 import { getStars, strToDate } from '~/util';
 
 const { review } = defineProps<{

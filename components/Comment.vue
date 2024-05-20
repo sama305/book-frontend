@@ -9,12 +9,14 @@
                         <p class="text-gray-400">{{ strToDate(comment.post_date) }}</p>
                     </div>
                 </div>
-                <div v-if="!isEmpty(currentUsername)" class="flex flex-col items-center">
-                    <UButton @click="likeComment" variant="link" color="black">
-                        <UIcon dynamic size="25" :name="comment.isliked ? `mdi:cards-heart` : `mdi:cards-heart-outline`" />
-                    </UButton>
-                    <p>{{ comment.likecount }}</p>
-                </div>
+                <template v-if="!isEmpty(currentUsername)">
+                    <LikeCountButton
+                        :init-is-liked="comment.isliked"
+                        :init-like-count="comment.likecount"
+                        @like="likeComment"
+                        @unlike="unlikeComment"
+                    />
+                </template>
             </div>
         </div>
         <div>
@@ -29,8 +31,6 @@
 import { jwtDecode } from 'jwt-decode';
 import type { CommentInfo } from '~/types';
 import { isEmpty, strToDate } from '~/util';
-
-const emit = defineEmits(['like'])
 
 const { comment } = defineProps<{
     comment: CommentInfo
@@ -54,8 +54,15 @@ async function likeComment() {
             "Authorization": `Bearer ${jwtToken.value}`
         }
     })
-    comment.likecount += 1;
-    emit('like', comment.commentid)
+}
+
+async function unlikeComment() {
+    await $fetch(`/api/comment/${comment.commentid}/likes` ,{
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
 }
 
 </script>
