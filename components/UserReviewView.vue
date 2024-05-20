@@ -2,9 +2,11 @@
     <div>
         <div class="mb-4 flex justify-between">
             <div class="flex items-center">
-                <div class="mr-4 h-16 w-16 bg-red-600" style="border-radius: 100%;"></div>
+                <ProfilePicture class="mr-4" :username="review.username" />
                 <div>
-                    <p class="text-4xl">{{ review.username }}</p>
+                    <a :href="`/user/${review.username}`">
+                        <p class="text-2xl">{{ review.username }}</p>
+                    </a>
                     <UButton :trailing="true" size="sm" class="text-md p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">
                         Full review
                     </UButton>

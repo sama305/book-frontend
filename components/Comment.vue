@@ -3,9 +3,7 @@
         <div class="mb-2 flex justify-between">
             <div class="w-full flex items-start justify-between">
                 <div class="flex items-center">
-                    <div class="flex justify-center items-baseline mr-4 h-12 w-12 shadow-lg" style="border-radius: 100%;">
-                        <p class="w-fit font-extralight text-4xl">{{ comment.username.at(0)?.toLocaleUpperCase() }}</p>
-                    </div>
+                    <ProfilePicture class="mr-4" :username="comment.username" />
                     <div>
                         <p class="text-3xl">{{ comment.username }}</p>
                         <p class="text-gray-400">{{ strToDate(comment.post_date) }}</p>

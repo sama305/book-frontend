@@ -2,10 +2,12 @@
     <div class="h-64 p-4">
         <div class="flex justify-start mb-2">
             <div class="w-[90px] h-[145px] min-w-[90px] min-h-[145px] mr-4">
-                <template v-if="review.cover">
-                    <img @click="onClickCover" width="110" height="145" class="shadow-md rounded w-full h-full" :src="review.cover" />
-                </template>
-                <USkeleton v-else class="w-full h-full" />
+                <a :href="`/book/${review.volumeid}`">
+                    <template v-if="review.cover">
+                        <img width="110" height="145" class="shadow-md rounded w-full h-full" :src="review.cover" />
+                    </template>
+                    <USkeleton v-else class="w-full h-full" />
+                </a>
             </div>
             <div class="w-full flex flex-col justify-between">
                 <div>
@@ -98,9 +100,5 @@ const reviewOptions = [
         }
     ]
 ]
-
-async function onClickCover() {
-    await navigateTo(`/book/${review.volumeid}`)
-}
 
 </script>
