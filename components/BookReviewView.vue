@@ -21,6 +21,12 @@
                         <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
                     </template>
                     <USkeleton v-else class="h-full w-full" />
+                    <LikeCountButton
+                        :init-is-liked="review.isliked"
+                        :init-like-count="review.likecount"
+                        @like="onLikeReview(review.reviewid)"
+                        @unlike="onUnlikeReview(review.reviewid)"
+                    />
                 </div>
                 <div class="flex justify-between items-end">
                     <div>
@@ -100,5 +106,23 @@ const reviewOptions = [
         }
     ]
 ]
+
+async function onLikeReview(reviewid: string) {
+    await $fetch(`/api/review/${reviewid}/likes`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+}
+
+async function onUnlikeReview(reviewid: string) {
+    await $fetch(`/api/review/${reviewid}/likes`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+}
 
 </script>

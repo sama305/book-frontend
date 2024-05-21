@@ -135,6 +135,9 @@ async function getPageOfReviews(page: number) {
         params: {
             page,
             booksPerPage
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     userReviews.value = res

@@ -131,6 +131,7 @@ export type GetUserReviewsRes = Array<{
     content: string
     rating: number
     post_date: string,
+    likecount: number,
     isliked: boolean
 }>
 
