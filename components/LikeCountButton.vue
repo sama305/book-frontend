@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-row-reverse items-center">
-        <UButton @click="likeComment" :class="{ scaled: isScaled }" variant="link" :color="isLiked ? `red`: `black`">
+    <div :class="`flex ${getDir(dir)} items-center`">
+        <UButton @click="likeComment" :class="{ scaled: isScaled }" size="sm" variant="link" :color="isLiked ? `red`: `black`">
             <UIcon dynamic size="25" :name="isLiked ? `mdi:cards-heart` : `mdi:cards-heart-outline`" />
         </UButton>
-        <p class="text-xl font-semibold">{{ likeCount }}</p>
+        <p class="font-mono">{{ likeCount }}</p>
     </div>
 </template>
 
@@ -11,9 +11,10 @@
 const emit = defineEmits(['like', 'unlike'])
 const isScaled = ref(false)
 
-const { initLikeCount, initIsLiked } = defineProps<{
+const { initLikeCount, initIsLiked, dir } = defineProps<{
     initLikeCount: number,
-    initIsLiked: boolean
+    initIsLiked: boolean,
+    dir: 'n' | 's' | 'e' | 'w'
 }>()
 
 const likeCount = ref(initLikeCount)
@@ -38,6 +39,20 @@ function scaleUp() {
         isScaled.value = false
     }, 200)
 }
+
+function getDir(dir: string) {
+    switch(dir) {
+        case 'n':
+            return 'flex-col-reverse'
+        case 'e':
+            return 'flex-row'
+        case 's':
+            return 'flex-col'
+        case 'w':
+            return 'flex-row-reverse'
+    }
+}
+//
 
 </script>
 

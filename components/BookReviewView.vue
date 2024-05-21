@@ -21,12 +21,6 @@
                         <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
                     </template>
                     <USkeleton v-else class="h-full w-full" />
-                    <LikeCountButton
-                        :init-is-liked="review.isliked"
-                        :init-like-count="review.likecount"
-                        @like="onLikeReview(review.reviewid)"
-                        @unlike="onUnlikeReview(review.reviewid)"
-                    />
                 </div>
                 <div class="flex justify-between items-end">
                     <div>
@@ -41,6 +35,13 @@
                             </UDropdown>
                         </template>
                     </div>
+                    <LikeCountButton
+                        :init-is-liked="review.isliked"
+                        :init-like-count="review.likecount"
+                        dir="w"
+                        @like="onLikeReview(review.reviewid)"
+                        @unlike="onUnlikeReview(review.reviewid)"
+                    />
                 </div>
             </div>
         </div>

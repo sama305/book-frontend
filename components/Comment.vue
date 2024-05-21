@@ -13,6 +13,7 @@
                     <LikeCountButton
                         :init-is-liked="comment.isliked"
                         :init-like-count="comment.likecount"
+                        dir="w"
                         @like="likeComment"
                         @unlike="unlikeComment"
                     />
