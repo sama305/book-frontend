@@ -5,7 +5,7 @@
                 <div class="flex items-center">
                     <ProfilePicture class="mr-4" :username="comment.username" />
                     <div>
-                        <p class="text-3xl">{{ comment.username }}</p>
+                        <p class="text-2xl">{{ comment.username }}</p>
                         <p class="text-gray-400">{{ strToDate(comment.post_date) }}</p>
                     </div>
                 </div>

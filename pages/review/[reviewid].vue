@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div class="lg:w-4/5 md:w-full m-auto">
+            <div class="lg:w-3/5 md:w-full m-auto">
                 <UCard>
                     <div class="mb-12 min-h-80">
                         <template v-for="c in comments">
