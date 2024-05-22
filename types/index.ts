@@ -21,6 +21,8 @@ export interface GetReviewRes {
     volumeid: string,
     reviewid: string,
     post_date: string,
+    likecount: number,
+    isliked: boolean
 }
 
 export interface ReviewView {

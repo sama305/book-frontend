@@ -33,12 +33,21 @@
                     </div>
                 </div>
                 <UCard class="mb-4">
-                    <UserCard
-                        :username="reviewInfo.username"
-                        :title="getStars(reviewInfo.rating)"
-                        :subtitle="`Posted on ${strToDate(reviewInfo.post_date)}`"
-                        class="mb-4"
-                    />
+                    <div class="flex justify-between items-start">
+                        <UserCard
+                            :username="reviewInfo.username"
+                            :title="getStars(reviewInfo.rating)"
+                            :subtitle="`Posted on ${strToDate(reviewInfo.post_date)}`"
+                            class="mb-4"
+                        />
+                        <LikeCountButton
+                            :init-is-liked="reviewInfo.isliked"
+                            :init-like-count="reviewInfo.likecount"
+                            @like="onLikeReview"
+                            @unlike="onUnlikeReview"
+                            dir="w"
+                        />
+                    </div>
                     <p>{{ reviewInfo.content }}</p>
                 </UCard>
             </div>
@@ -72,7 +81,10 @@ const commentsPerPage = 4
 
 
 const reviewInfo = await $fetch(`/api/review/${reviewid}`, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+        "Authorization": `Bearer ${jwtToken.value}`
+    }
 })
 const bookInfo = await $fetch(`/api/volume/${reviewInfo.volumeid}`, {
     method: 'GET'
@@ -123,6 +135,24 @@ async function calcNumPages() {
         method: 'GET'
     })
     numPages.value = Math.ceil(stats.commentcount / commentsPerPage)
+}
+
+async function onLikeReview() {
+    await $fetch(`/api/review/${reviewid}/likes`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+}
+
+async function onUnlikeReview() {
+    await $fetch(`/api/review/${reviewid}/likes`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
 }
 
 </script>

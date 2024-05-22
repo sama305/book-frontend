@@ -7,24 +7,19 @@ export default defineEventHandler(async (event) => {
     const queries: { page: number, booksPerPage: number } = await getQuery(event)
 	
     try {
-        if (authHeader) {
-            const res: GetUserReviewsRes = await $fetch(`${config.public.backendBaseURL}/user/${username}/reviews`, {
-                method: "GET",
-                query: {
-                    sort_order: "post_date",
-                    sort_dir: "ascending",
-                    page: queries.page,
-                    amount: queries.booksPerPage,
-                },
-                headers: {
-                    "Authorization": authHeader
-                }
-            })
-            return res
-        }
-        else {
-            throw createError({ message: "No auth token provided." })
-        }
+        const res: GetUserReviewsRes = await $fetch(`${config.public.backendBaseURL}/user/${username}/reviews`, {
+            method: "GET",
+            query: {
+                sort_order: "post_date",
+                sort_dir: "ascending",
+                page: queries.page,
+                amount: queries.booksPerPage,
+            },
+            headers: {
+                "Authorization": authHeader ?? ""
+            }
+        })
+        return res
     }
     catch (e: any) {
         throw createError(e)
