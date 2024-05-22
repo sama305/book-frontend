@@ -36,22 +36,17 @@
                     <UserCard
                         :username="reviewInfo.username"
                         :title="getStars(reviewInfo.rating)"
-                        :subtitle="strToDate(reviewInfo.post_date)"
+                        :subtitle="`Posted on ${strToDate(reviewInfo.post_date)}`"
                         class="mb-4"
                     />
                     <p>{{ reviewInfo.content }}</p>
                 </UCard>
             </div>
             <UCard class="w-1/2">
-                <div>
-                    <div class="mb-8" v-for="c in comments">
-                        <UserCard
-                            :username="c.username"
-                            :title="c.username"
-                            :subtitle="strToDate(c.post_date)"
-                        />
-                        <p v-html="parseComment(c.content)"></p>
-                    </div>
+                <div class="mb-4" v-for="c in comments">
+                    <Comment
+                        :comment="c"
+                    />
                 </div>
                 <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
             </UCard>
@@ -123,16 +118,6 @@ async function calcNumPages() {
         method: 'GET'
     })
     numPages.value = Math.ceil(stats.commentcount / commentsPerPage)
-}
-
-function parseComment(content: string) {
-    return content.split(' ').map(word => {
-        if (word.startsWith('@')) {
-            const username = word.slice(1);
-            return `<a class="hover:underline text-blue-400" href="/user/${username}">${word}</a>`;
-        }
-        return word;
-    }).join(' ');
 }
 
 </script>

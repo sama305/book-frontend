@@ -21,8 +21,7 @@
             </div>
         </div>
         <div>
-            <p class="line-clamp-4">
-                {{ comment.content }}
+            <p v-html="parseComment(comment.content)" class="line-clamp-4">
             </p>
         </div>
     </div>
@@ -64,6 +63,16 @@ async function unlikeComment() {
             "Authorization": `Bearer ${jwtToken.value}`
         }
     })
+}
+
+function parseComment(content: string) {
+    return content.split(' ').map(word => {
+        if (word.startsWith('@')) {
+            const username = word.slice(1);
+            return `<a class="hover:underline text-blue-400" href="/user/${username}">${word}</a>`;
+        }
+        return word;
+    }).join(' ');
 }
 
 </script>
