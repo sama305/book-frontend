@@ -21,8 +21,7 @@
             </div>
         </div>
         <div>
-            <p v-html="parseComment(comment.content)" class="line-clamp-4">
-            </p>
+            <div v-html="parseComment(comment.content)" class="line-clamp-4"></div>
         </div>
     </div>
 </template>

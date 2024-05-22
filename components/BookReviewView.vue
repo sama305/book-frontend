@@ -97,10 +97,6 @@ const reviewOptions = [
                 isEditing.value = true
             }
         },
-        {
-            label: 'Change rating',
-            icon: 'i-heroicons-star-16-solid'
-        }
     ],
     [
         {

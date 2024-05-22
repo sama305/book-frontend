@@ -10,7 +10,7 @@
             <div class="flex mb-8">
                 <div class="basis-full flex justify-between">
                     <div class="flex">
-                        <div class="mr-4 h-full flex">
+                        <div class="mr-4 h-full">
                             <a :href="`/book/${volumeid}`">
                                 <img class="shadow-md rounded-xl" :src="bookInfo.cover" />
                             </a>
@@ -22,7 +22,7 @@
                                 <p class="text-sm text-gray-400">Published 2014</p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-400">12 reviews with an average rating of {{ getStars(bookStats.avgrating / 2) }}</p>
+                                <p class="text-sm text-gray-400">{{ bookStats.reviewcount }} reviews with an average rating of {{ getStars(bookStats.avgrating) }}</p>
                             </div>
                         </div>
                     </div>
