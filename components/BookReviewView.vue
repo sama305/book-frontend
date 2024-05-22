@@ -11,14 +11,14 @@
             </div>
             <div class="w-full flex flex-col justify-between">
                 <div>
-                    <p class="font-extralight text-3xl h-10 line-clamp-1 italic overflow-hidden overflow-ellipsis" :title="review.title">
+                    <p class="text-xl line-clamp-1 italic overflow-hidden overflow-ellipsis" :title="review.title">
                         <template v-if="review.title">
                             {{ review.title }}
                         </template>
                         <USkeleton v-else class="h-full w-full"></USkeleton>
                     </p>
                     <template v-if="review.authors">
-                        <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
+                        <p>By {{ formatArrAsSentence(review.authors) }}</p>
                     </template>
                     <USkeleton v-else class="h-full w-full" />
                 </div>
@@ -28,20 +28,20 @@
                         <p v-if="review.rating >= 1" class="font-extrabold">{{ getStars(review.rating) }}</p>
                         <UButton @click="$emit('onOpenReview', review)" :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
                     </div>
-                    <div>
+                    <div class="flex">
                         <template v-if="validated">
-                            <UDropdown :items="reviewOptions" :popper="{ offsetDistance: 0, placement: 'bottom-start' }">
+                            <UDropdown :items="reviewOptions" :popper="{ offsetDistance: 0, placement: 'bottom-start' }" class="mr-4">
                                 <UButton color="black" size="sm" square icon="i-heroicons-ellipsis-horizontal-16-solid" variant="link" />
                             </UDropdown>
                         </template>
+                        <LikeCountButton
+                            :init-is-liked="review.isliked"
+                            :init-like-count="review.likecount"
+                            dir="w"
+                            @like="onLikeReview(review.reviewid)"
+                            @unlike="onUnlikeReview(review.reviewid)"
+                        />
                     </div>
-                    <LikeCountButton
-                        :init-is-liked="review.isliked"
-                        :init-like-count="review.likecount"
-                        dir="w"
-                        @like="onLikeReview(review.reviewid)"
-                        @unlike="onUnlikeReview(review.reviewid)"
-                    />
                 </div>
             </div>
         </div>

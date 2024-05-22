@@ -35,6 +35,8 @@ export interface ReviewView {
     authors: Array<string>,
     title: string,
     cover: string,
+    isliked: boolean
+    likecount: number
 }
 
 
