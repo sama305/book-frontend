@@ -22,9 +22,6 @@ export default defineEventHandler(async (event) => {
             })
             return res
         }
-        else {
-            throw createError({ message: "No auth token provided." })
-        }
     }
     catch (e: any) {
         throw createError(e)
