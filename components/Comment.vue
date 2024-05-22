@@ -2,12 +2,12 @@
     <div class="w-full">
         <div class="mb-2 flex justify-between">
             <div class="w-full flex items-start justify-between">
-                <div class="flex items-center">
-                    <ProfilePicture class="mr-4" :username="comment.username" />
-                    <div>
-                        <p class="text-2xl">{{ comment.username }}</p>
-                        <p class="text-gray-400">{{ strToDate(comment.post_date) }}</p>
-                    </div>
+                <div>
+                    <UserCard
+                        :username="comment.username"
+                        :title="comment.username"
+                        :subtitle="strToDate(comment.post_date)"
+                    />
                 </div>
                 <template v-if="!isEmpty(currentUsername)">
                     <LikeCountButton

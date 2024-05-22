@@ -7,7 +7,7 @@
                     <a :href="`/user/${review.username}`">
                         <p class="text-2xl">{{ review.username }}</p>
                     </a>
-                    <UButton :trailing="true" size="sm" class="text-md p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">
+                    <UButton @click="async () => { await navigateTo(`/review/${review.reviewid}}`) }" :trailing="true" size="sm" class="text-md p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">
                         Full review
                     </UButton>
                 </div>
