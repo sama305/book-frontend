@@ -55,20 +55,18 @@
             </template>
         </div>
         <div class="h-full">
-            <p class="text-s font-thin">Rating (<i>optional</i>)</p>
-            <div class="w-fit m-auto">
-                <StarRating @select-star="(s) => { reviewStars = s }" />
-            </div>
-            <p class="text-s font-thin">Review body (<i>optional</i>)</p>
-            <UTextarea class="mb-4" variant="outline" placeholder="Type something here..." v-model="reviewContent" />
-            <UButton icon="i-heroicons-check-16-solid" :disabled="!canPostReview(selectedReviewBook)" @click="postReview">Post Review</UButton>
+            <RatingAndContent
+                label="Post Review"
+                icon="i-heroicons-check-16-solid"
+                @submit="onPostReview"
+            />
         </div>
     </UCard>
 </template>
 
 <script setup lang="ts">
 import { debounce } from 'vue-debounce'
-import { type BookSearchInfo, type PostReviewReq, type PostReviewRes } from "~/types"
+import { type PostReviewReq } from "~/types"
 import { isEmpty, formatArrAsSentence } from '~/util';
 
 const emit = defineEmits(['postReview'])
@@ -78,9 +76,6 @@ const jwtToken = useCookie('jwt_token')
 const searchQuery = ref('')
 const rawSearchInput = ref('')
 
-const reviewContent = ref('')
-const reviewStars = ref(0)
-
 const isLoading = computed(() => searchQuery.value != rawSearchInput.value)
 
 const selectedReviewBook: Ref<any | undefined> = ref(undefined)
@@ -88,6 +83,8 @@ const results: Ref<Array<any>> = ref([])
 const pagedResults: Ref<Array<any>> = ref([])
 const resultsPerPage = 4;
 const currentPage = ref(0)
+
+const toast = useToast()
 
 watch(rawSearchInput, debounce(async (newVal: string) => {
     try {
@@ -115,24 +112,28 @@ watch(rawSearchInput, debounce(async (newVal: string) => {
 
     searchQuery.value = newVal
 }, 400))
-    
-function canPostReview(book: BookSearchInfo | undefined) {
-    return book !== undefined
-}
 
-async function postReview() {
-    const res = await $fetch('/api/review', {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        },
-        body: <PostReviewReq>{
-            content: reviewContent.value,
-            rating: reviewStars.value,
-            volumeid: selectedReviewBook.value.volumeid
-        }
-    })
-    emit('postReview', res.reviewid)
+
+async function onPostReview(rating: number, content: string) {
+    if (selectedReviewBook !== undefined) {
+        const res = await $fetch('/api/review', {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${jwtToken.value}`
+            },
+            body: <PostReviewReq>{
+                content: content,
+                rating: rating,
+                volumeid: selectedReviewBook.value.volumeid
+            }
+        })
+        emit('postReview', res.reviewid)
+    }
+    else {
+        toast.add({
+            title: 'Please select a book to review.'
+        })
+    }
 }
 
 </script>

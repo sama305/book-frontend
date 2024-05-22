@@ -51,8 +51,9 @@
                                             <BookReviewView
                                                 :review="rev"
                                                 class="md:w-1/2 sm:w-full"
-                                                @onOpenReview="navigateTo(`/review/${rev.reviewid}`)"
+                                                @on-open-review="navigateTo(`/review/${rev.reviewid}`)"
                                                 @delete-review="refetchReviews"
+                                                @update-review="refetchReviews"
                                             />
                                         </template>
                                     </template>

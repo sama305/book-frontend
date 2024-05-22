@@ -54,14 +54,26 @@
             </template>
         </p>
     </div>
+
+    <UModal v-model="isEditing">
+        <UCard>
+            <p class="text-xl">Edit Review for <i>{{ review.title }}</i></p>
+            <RatingAndContent
+                :init-content="review.content"
+                :init-rating="review.rating"
+                label="Save Changes"
+                @submit="onSaveChanges"
+            />
+        </UCard>
+    </UModal>
 </template>
 
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
-import type { ReviewView } from '~/types';
+import type { PutReviewReq, ReviewView } from '~/types';
 import { formatArrAsSentence, getStars, strToDate } from '~/util';
 
-const emit = defineEmits(['deleteReview', 'onOpenReview'])
+const emit = defineEmits(['deleteReview', 'onOpenReview', 'updateReview'])
 
 const { review } = defineProps<{
     review: ReviewView
@@ -71,6 +83,8 @@ const jwtToken = useCookie('jwt_token')
 
 const validated = ref(false)
 
+const isEditing = ref(false)
+
 // validate incoming user
 if (jwtToken && jwtToken.value) {
     const decoded: any = jwtDecode(jwtToken.value)
@@ -79,12 +93,14 @@ if (jwtToken && jwtToken.value) {
     }
 }
 
-
 const reviewOptions = [
     [
         {
             label: 'Edit content',
             icon: 'i-heroicons-pencil-16-solid',
+            click: () => {
+                isEditing.value = true
+            }
         },
         {
             label: 'Change rating',
@@ -124,6 +140,21 @@ async function onUnlikeReview(reviewid: string) {
             "Authorization": `Bearer ${jwtToken.value}`
         }
     })
+}
+
+async function onSaveChanges(rating: number, content: string) {
+    await $fetch(`/api/review/${review.reviewid}`, {
+        method: 'PUT',
+        body: <PutReviewReq>{
+            content,
+            rating
+        },
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+    emit('updateReview')
+    isEditing.value = false
 }
 
 </script>

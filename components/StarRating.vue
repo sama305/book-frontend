@@ -7,7 +7,7 @@
                     @mouseover="handleMouseOver($event, i)"
                     @click="selectStar($event, i)"
                     dynamic
-                    :name="i * 2 <= hoveredStar ? `mdi:star` : (i * 2 - 1 === hoveredStar ? `mdi:star-half-full` : `mdi:star-outline`)"
+                    :name="hovering ? (i * 2 <= hoveredStar ? `mdi:star` : (i * 2 - 1 === hoveredStar ? `mdi:star-half-full` : `mdi:star-outline`)) : (i * 2 <= defaultStar ? `mdi:star` : (i * 2 - 1 === defaultStar ? `mdi:star-half-full` : `mdi:star-outline`))"
                     class="star"
                 />
             </template>
@@ -21,8 +21,14 @@
 </template>
 
 <script setup lang="ts">
+const { initRating } = withDefaults(defineProps<{
+    initRating: number
+}>(), {
+    initRating: 0
+})
+
 const hoveredStar = ref(0)
-const defaultStar = ref(0)
+const defaultStar = ref(initRating)
 const hovering = ref(false)
 
 const starSize = 30
