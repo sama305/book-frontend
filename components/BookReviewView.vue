@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <p class="font-extralight line-clamp-3 overflow-hidden overflow-ellipsis">
+        <p class="line-clamp-3 overflow-hidden overflow-ellipsis">
             <template v-if="review.content">
                 {{ review.content }}
             </template>

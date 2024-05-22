@@ -46,7 +46,7 @@
                         <div class="h-full flex flex-col justify-between">
                             <div class="flex flex-wrap mb-4">
                                 <template v-for="rev in userReviews">
-                                    <div class="p-4 w-1/2" v-if="rev">
+                                    <div class="pr-4 pl-4 w-1/2" v-if="rev">
                                         <BookReviewView
                                             :review="rev"
                                             @on-open-review="navigateTo(`/review/${rev.reviewid}`)"
