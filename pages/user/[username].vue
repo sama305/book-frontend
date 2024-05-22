@@ -44,19 +44,16 @@
                 <div class="h-fit min-h-96 lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3">
                     <UCard class="h-full">
                         <div class="h-full flex flex-col justify-between">
-                            <div class="flex flex-wrap justify-start mb-4">
-                                <template v-if="userReviews">
-                                    <template v-for="rev in userReviews">
-                                        <template v-if="rev">
-                                            <BookReviewView
-                                                :review="rev"
-                                                class="md:w-1/2 sm:w-full"
-                                                @on-open-review="navigateTo(`/review/${rev.reviewid}`)"
-                                                @delete-review="refetchReviews"
-                                                @update-review="refetchReviews"
-                                            />
-                                        </template>
-                                    </template>
+                            <div class="flex flex-wrap mb-4">
+                                <template v-for="rev in userReviews">
+                                    <div class="p-4 w-1/2" v-if="rev">
+                                        <BookReviewView
+                                            :review="rev"
+                                            @on-open-review="navigateTo(`/review/${rev.reviewid}`)"
+                                            @delete-review="refetchReviews"
+                                            @update-review="refetchReviews"
+                                        />
+                                    </div>
                                 </template>
                             </div>
                             <div>

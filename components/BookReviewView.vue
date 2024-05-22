@@ -1,5 +1,5 @@
 <template>
-    <div class="h-64 p-4">
+    <div class="h-64">
         <div class="flex justify-start mb-2">
             <div class="w-[90px] h-[145px] min-w-[90px] min-h-[145px] mr-4">
                 <a :href="`/book/${review.volumeid}`">
@@ -56,15 +56,10 @@
     </div>
 
     <UModal v-model="isEditing">
-        <UCard>
-            <p class="text-xl">Edit Review for <i>{{ review.title }}</i></p>
-            <RatingAndContent
-                :init-content="review.content"
-                :init-rating="review.rating"
-                label="Save Changes"
-                @submit="onSaveChanges"
-            />
-        </UCard>
+        <UpdateReviewCard
+            @update-review="onUpdateReview"
+            :review="review"
+        />
     </UModal>
 </template>
 
@@ -142,17 +137,7 @@ async function onUnlikeReview(reviewid: string) {
     })
 }
 
-async function onSaveChanges(rating: number, content: string) {
-    await $fetch(`/api/review/${review.reviewid}`, {
-        method: 'PUT',
-        body: <PutReviewReq>{
-            content,
-            rating
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
-    })
+async function onUpdateReview() {
     emit('updateReview')
     isEditing.value = false
 }
