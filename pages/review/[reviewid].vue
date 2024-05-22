@@ -5,8 +5,8 @@
 
     <hr>
     <PageBody>
-        <div class="w-4/5 m-auto flex">
-            <div class="w-1/2 mr-4">
+        <div class="w-4/5 m-auto flex flex-col lg:flex-row">
+            <div class="lg:w-1/2 lg:mr-4">
                 <div class="flex justify-between mb-4">
                     <div class="flex">
                         <div class="min-w-16 max-w-16 min-h-24 max-h-24 mr-4">
@@ -42,13 +42,18 @@
                     <p>{{ reviewInfo.content }}</p>
                 </UCard>
             </div>
-            <UCard class="w-1/2">
-                <div class="mb-4" v-for="c in comments">
-                    <Comment
-                        :comment="c"
-                    />
-                </div>
-                <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
+            <UCard class="lg:w-1/2">
+                <template v-if="comments">
+                    <div class="mb-4" v-for="c in comments">
+                        <Comment
+                            :comment="c"
+                        />
+                    </div>
+                    <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
+                </template>
+                <template v-else>
+                    <p class="text-gray-400">This review has no comments yet. You can help by expanding it.</p>
+                </template>
             </UCard>
         </div>
     </PageBody>
