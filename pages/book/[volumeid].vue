@@ -7,33 +7,34 @@
     
     <PageBody>
         <div class="w-4/5 m-auto">
-            <div class="h-80 flex items-center mb-4">
-                <div class=" h-full max-w-[200px] min-w-[200px] mr-8">
-                    <img class="shadow-md rounded-xl w-full h-full" :src="bookInfo.cover" />
-                </div>
-                <div class="w-full">
-                    <div class="flex justify-between items-center">
-                        <div>
+            <div class="flex mb-8">
+                <div class="basis-full flex justify-between">
+                    <div class="flex">
+                        <div class="mr-4 h-full flex">
+                            <a :href="`/book/${volumeid}`">
+                                <img class="shadow-md rounded-xl" :src="bookInfo.cover" />
+                            </a>
+                        </div>
+                        <div class="flex flex-col justify-between">
                             <div>
-                                <p class="text-4xl font-extralight italic">{{ bookInfo.title }}</p>
-                                <p class="mb-4 text-xl font-extralight">By {{ formatArrAsSentence(bookInfo.authors) }}</p>
+                                <p class="text-xl italic">{{ bookInfo.title }}</p>
+                                <p class="text-lg">By {{ formatArrAsSentence(bookInfo.authors) }}</p>
+                                <p class="text-sm text-gray-400">Published 2014</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400">12 reviews with an average rating of {{ getStars(bookStats.avgrating / 2) }}</p>
                             </div>
                         </div>
-                        <div class="w-1/2 flex justify-center">
-                            <p class="text-5xl font-extralight mb-4">★ {{ (bookStats.avgrating / 2).toFixed(2) }}</p>
-                        </div>
                     </div>
-                    <template v-if="bookInfo.description">
-                        <UCard>
-                            <p class="mb-4 font-light line-clamp-5" v-html="bookInfo.description"></p>
-                            <template v-if="bookInfo.description.length > 400">
-                                <UButton @click="showDesc" variant="link" class="p-0">
-                                    Show More
-                                </UButton>
-                            </template>
-                        </UCard>
-                    </template>
                 </div>
+                <UCard class="basis-full">
+                    <div class="mb-4 line-clamp-5" v-html="`<p>${bookInfo.description}</p>`"></div>
+                    <template v-if="bookInfo.description.length > 400">
+                        <UButton @click="showDesc" variant="link" class="p-0">
+                            Show More
+                        </UButton>
+                    </template>
+                </UCard>
             </div>
             <div>
                 <UCard>
@@ -58,7 +59,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import type { GetVolumeReviewsRes } from '~/types';
-import { formatArrAsSentence } from '~/util';
+import { formatArrAsSentence, getStars } from '~/util';
 
 const jwtToken = useCookie('jwt_token')
 const volumeid = useRoute().params.volumeid
