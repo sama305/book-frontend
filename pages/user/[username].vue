@@ -7,32 +7,53 @@
 
     <PageBody v-if="userInfo">
         <div class="w-4/5 m-auto">
-            <div class="grid lg:h-[50vh] lg:gap-[30px] md:gap-[15px] lg:grid-cols-[20%_75%] md:grid-cols lg:grid-rows-2">
+            <div class="grid lg:h-[70vh] lg:gap-[30px] md:gap-[15px] lg:grid-cols-[20%_75%] md:grid-cols lg:grid-rows-3">
                 <div class="lg:row-start-1 lg:row-end-2 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2">
-                    <UCard class="h-full">
-                        <div>
-                            <template v-if="!editingDesc">
-                                <div class="flex items-center justify-between" style="white-space: pre-wrap;">
-                                    <template v-if="!isEmpty(userDescription)">
-                                        {{ userDescription }}
-                                    </template>
-                                    <template v-else>
-                                        {{ userInfo.username }} hasn't written a profile description yet.
-                                    </template>
-                                    <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
-                                </div>
-                            </template>
-
-                            <div v-else>
-                                <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
-                                <UButton icon="i-heroicons-check-16-solid" @click="onSaveDesc">Save</UButton>
+                    <UserCard
+                        :username="userInfo.username"
+                        :subtitle="`Joined ${strToDate(userInfo.join_date)}`"
+                        class="mb-4"
+                    >
+                        <template #title>
+                            <div class="flex items-baseline justify-between">
+                                <p class="text-2xl">{{ userInfo.username }}</p>
+                                <template v-if="isNotSelf()">
+                                    <FollowButton
+                                        :init-is-following="userInfo.isfollowing"
+                                        @follow="followUser"
+                                        @unfollow="unfollowUser"
+                                    />
+                                </template>
                             </div>
+                        </template>
+                    </UserCard>
+                    <UCard>
+                        <p>{{ userInfo.followercount }} followers</p>
+                        <p>{{ userInfo.followingcount }} following</p>
+                    </UCard>
+                </div>
+                <div class="lg:row-start-2 lg:row-end-3 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2">
+                    <UCard class="h-full">
+                        <template v-if="!editingDesc">
+                            <div class="flex items-center justify-between" style="white-space: pre-wrap;">
+                                <template v-if="!isEmpty(userDescription)">
+                                    {{ userDescription }}
+                                </template>
+                                <template v-else>
+                                    {{ userInfo.username }} hasn't written a profile description yet.
+                                </template>
+                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
+                            </div>
+                        </template>
+
+                        <div v-else>
+                            <UTextarea v-model="userDescription" class="mb-2" placeholder="Tell us a little about yourself..." />
+                            <UButton icon="i-heroicons-check-16-solid" @click="onSaveDesc">Save</UButton>
                         </div>
                     </UCard>
                 </div>
-                <div class="lg:row-start-2 lg:row-end-3 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3">
+                <div class="lg:row-start-3 lg:row-end-4 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3">
                     <UCard class="md:h-full lg:h-fit">
-                        <p>Joined {{ strToDate(userInfo.join_date) }}</p>
                         <UButton variant="ghost">
                             <div class="flex items-center">
                                 <UIcon class="mr-2" name="i-heroicons-envelope" />
@@ -84,7 +105,10 @@ const userDescription = ref('')
 const userReviews: Ref<Array<any>> = ref([]);
 
 const userInfo = await $fetch(`/api/user/${username}`, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+        "Authorization": `Bearer ${jwtToken.value}`
+    }
 })
 
 const reviewInfo = await $fetch(`/api/user/${userInfo.username}/reviews/stats`, {
@@ -158,20 +182,31 @@ async function refetchReviews() {
     await getPageOfReviews(currentPage.value - 1)
 }
 
-async function onUpdateReview(reviewid: string) {
-    const i = userReviews.value.findIndex(r => r.reviewid === reviewid)
-    userReviews.value[i] = await $fetch(`/api/review/${reviewid}`, {
-        method: 'GET'
-    })
-
-    const res = await $fetch(`/api/volume/${userReviews.value[i].volumeid}`, {
-        method: 'GET',
-    })
-
-    userReviews.value[i] = {
-        ...userReviews.value[i],
-        ...res
+function isNotSelf() {
+    if (!jwtToken || !jwtToken.value) {
+        return true
     }
+    
+    return (jwtDecode(jwtToken.value) as any).username !== userInfo.username
+}
+
+async function followUser() {
+    console.log('test')
+    await $fetch(`/api/user/${username}/follows`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
+}
+
+async function unfollowUser() {
+    await $fetch(`/api/user/${username}/follows`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${jwtToken.value}`
+        }
+    })
 }
 
 </script>

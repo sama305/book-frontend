@@ -70,7 +70,10 @@ export interface GetUserRes {
     username: string,
     email: string,
     description: string,
-    join_date: string
+    join_date: string,
+    followercount: number,
+    followingcount: number
+    isfollowing: boolean,
 }
 
 
