@@ -1,9 +1,9 @@
 <template>
-    <UButton icon="i-heroicons-users-16-solid" @click="openFollowersModal" variant="link" class="p-0">
+    <UButton :disabled="followercount === 0" icon="i-heroicons-users-16-solid" @click="openFollowersModal" variant="link" class="p-0">
         {{ followercount }} followers
     </UButton>
     <br>
-    <UButton icon="i-heroicons-user-16-solid" @click="openFollowingModal" variant="link" class="p-0">
+    <UButton :disabled="followingcount === 0" icon="i-heroicons-user-16-solid" @click="openFollowingModal" variant="link" class="p-0">
         {{ followingcount }} following
     </UButton>
 
@@ -12,6 +12,7 @@
             <p class="text-3xl text-center mb-8">Users that follow {{ username }}</p>
             <UsersList
                 :users="followers"
+                :total-users="followercount"
             />
         </UCard>
     </UModal>
@@ -21,6 +22,7 @@
             <p class="text-3xl text-center mb-8">Users that {{ username }} follows</p>
             <UsersList
                 :users="following"
+                :total-users="followingcount"
             />
         </UCard>
     </UModal>
