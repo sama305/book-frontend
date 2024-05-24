@@ -15,7 +15,7 @@
                         class="mb-4"
                     >
                         <template #title>
-                            <div class="flex items-baseline justify-between">
+                            <div class="flex flex-wrap items-baseline justify-between">
                                 <p class="text-2xl">{{ userInfo.username }}</p>
                                 <template v-if="isNotSelf()">
                                     <FollowButton
@@ -28,21 +28,24 @@
                         </template>
                     </UserCard>
                     <UCard>
-                        <p>{{ userInfo.followercount }} followers</p>
-                        <p>{{ userInfo.followingcount }} following</p>
+                        <UserFollowsButtons
+                            :username="userInfo.username"
+                            :followercount="userInfo.followercount"
+                            :followingcount="userInfo.followingcount"
+                        />
                     </UCard>
                 </div>
                 <div class="lg:row-start-2 lg:row-end-3 lg:col-start-1 lg:col-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2">
                     <UCard class="h-full">
                         <template v-if="!editingDesc">
-                            <div class="flex items-center justify-between" style="white-space: pre-wrap;">
+                            <div class="flex items-start justify-between" style="white-space: pre-wrap;">
                                 <template v-if="!isEmpty(userDescription)">
                                     {{ userDescription }}
                                 </template>
                                 <template v-else>
-                                    {{ userInfo.username }} hasn't written a profile description yet.
+                                    <p class="text-gray-400">{{ userInfo.username }} hasn't written a profile description yet.</p>
                                 </template>
-                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
+                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit p-1" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
                         </template>
 
@@ -64,7 +67,7 @@
                 </div>
                 <div class="h-fit min-h-96 lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3">
                     <UCard class="h-full">
-                        <div class="h-full flex flex-col justify-between">
+                        <div v-if="userReviews" class="h-full flex flex-col justify-between">
                             <div class="flex flex-wrap mb-4">
                                 <template v-for="rev in userReviews">
                                     <div class="pr-4 pl-4 w-1/2" v-if="rev">
@@ -80,6 +83,9 @@
                             <div>
                                 <UPagination :max="5" :page-count="1" :total="numPages" v-model="currentPage"/>
                             </div>
+                        </div>
+                        <div v-else>
+                            <p class="text-gray-400">{{ userInfo.username }} hasn't written a review yet.</p>
                         </div>
                     </UCard>
                 </div>
@@ -191,7 +197,6 @@ function isNotSelf() {
 }
 
 async function followUser() {
-    console.log('test')
     await $fetch(`/api/user/${username}/follows`, {
         method: 'POST',
         headers: {

@@ -153,6 +153,15 @@ export interface PatchDescReq {
     description: string
 }
 
+/* /user/[username]/following */
+export type GetUserFollowingRes = Array<{
+    username: string,
+    isfollowing: boolean
+}>
+
+/* /user/[username]/followers */
+export type GetUserFollowersRes = GetUserFollowingRes
+
 /* /volume/[volumeid] */
 export interface GetVolumeRes {
     authors: Array<string>,

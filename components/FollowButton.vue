@@ -3,6 +3,7 @@
         @click="toggleFollow"
         class="p-0"
         :icon="isFollowing ? 'i-heroicons-user-minus-16-solid' : 'i-heroicons-user-plus-16-solid'"
+        trailing
         variant="link"
     >
         {{ isFollowing ? 'Following' : 'Follow' }}
