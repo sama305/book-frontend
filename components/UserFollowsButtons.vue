@@ -1,9 +1,9 @@
 <template>
-    <UButton @click="openFollowersModal" variant="link" class="p-0">
+    <UButton icon="i-heroicons-users-16-solid" @click="openFollowersModal" variant="link" class="p-0">
         {{ followercount }} followers
     </UButton>
     <br>
-    <UButton @click="openFollowingModal" variant="link" class="p-0">
+    <UButton icon="i-heroicons-users-16-solid" @click="openFollowingModal" variant="link" class="p-0">
         {{ followingcount }} following
     </UButton>
 
