@@ -3,7 +3,7 @@
         {{ followercount }} followers
     </UButton>
     <br>
-    <UButton icon="i-heroicons-users-16-solid" @click="openFollowingModal" variant="link" class="p-0">
+    <UButton icon="i-heroicons-user-16-solid" @click="openFollowingModal" variant="link" class="p-0">
         {{ followingcount }} following
     </UButton>
 
