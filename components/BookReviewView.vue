@@ -29,7 +29,7 @@
                         <UButton @click="$emit('onOpenReview', review)" :trailing="true" size="sm" class="p-0" variant="link" icon="i-heroicons-arrow-up-right-16-solid">Full review</UButton>
                     </div>
                     <div class="flex">
-                        <template v-if="validated">
+                        <template v-if="isUserValid(jwtToken, review.username)">
                             <UDropdown :items="reviewOptions" :popper="{ offsetDistance: 0, placement: 'bottom-start' }" class="mr-4">
                                 <UButton color="black" size="sm" square icon="i-heroicons-ellipsis-horizontal-16-solid" variant="link" />
                             </UDropdown>
@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
 import type { ReviewView } from '~/types';
-import { formatArrAsSentence, getStars, strToDate } from '~/util';
+import { formatArrAsSentence, getStars, isUserValid, strToDate } from '~/util';
 
 const emit = defineEmits(['deleteReview', 'onOpenReview', 'updateReview'])
 
@@ -76,17 +76,7 @@ const { review } = defineProps<{
 
 const jwtToken = useCookie('jwt_token')
 
-const validated = ref(false)
-
 const isEditing = ref(false)
-
-// validate incoming user
-if (jwtToken && jwtToken.value) {
-    const decoded: any = jwtDecode(jwtToken.value)
-    if (decoded.username === review.username) {
-        validated.value = true
-    }
-}
 
 const reviewOptions = [
     [

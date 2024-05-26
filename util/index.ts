@@ -1,3 +1,5 @@
+import { jwtDecode } from "jwt-decode";
+
 export function isEmpty(str: string) {
     return str.length <= 0;
 }
@@ -38,4 +40,14 @@ const ops: Intl.DateTimeFormatOptions = {
 
 export function strToDate(s: string) {
     return new Date(s).toLocaleDateString('en-US', ops)
+}
+
+export function isUserValid(token: string | undefined | null, username: string) {
+    if (token) {
+        const decoded: any = jwtDecode(token)
+        if (decoded.username === username) {
+            return true
+        }
+    }
+    return false
 }

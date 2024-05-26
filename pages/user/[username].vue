@@ -45,7 +45,7 @@
                                 <template v-else>
                                     <p class="text-gray-400">{{ userInfo.username }} hasn't written a profile description yet.</p>
                                 </template>
-                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit p-1" v-if="validated && !editingDesc" @click="editingDesc = true" variant="link" />
+                                <UButton size="sm" icon="i-heroicons-pencil-square-16-solid" square class="w-fit p-1" v-if="isUserValid(jwtToken, userInfo.username) && !editingDesc" @click="editingDesc = true" variant="link" />
                             </div>
                         </template>
 
@@ -96,13 +96,12 @@
 
 <script setup lang="ts">
 import type { PatchDescReq } from '~/types';
-import { isEmpty, strToDate } from '~/util';
+import { isEmpty, isUserValid, strToDate } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
 const booksPerPage = 4;
 
 const username = useRoute().params.username;
-const validated = ref(false)
 const jwtToken = useCookie('jwt_token')
 
 const currentPage = ref(1)
@@ -124,14 +123,6 @@ if (userInfo) {
     userDescription.value = userInfo.description;
 
     await getPageOfReviews(0)
-
-    // validate incoming user
-    if (jwtToken && jwtToken.value) {
-        const decoded: any = jwtDecode(jwtToken.value)
-        if (decoded.username === userInfo.username) {
-            validated.value = true
-        }
-    }
 }
 
 watch(currentPage, async (newVal) => {

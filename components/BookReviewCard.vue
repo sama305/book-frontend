@@ -8,7 +8,7 @@
                     </p>
                     <p class="font-extralight">By {{ formatArrAsSentence(review.authors) }}</p>
                 </div>
-                <template v-if="validated">
+                <template v-if="isUserValid(jwtToken, userInfo.username)">
                     <UDropdown :items="reviewOptions" :popper="{ offsetDistance: 0, placement: 'bottom-start' }">
                         <UButton color="black" size="sm" square icon="i-heroicons-ellipsis-horizontal-16-solid" variant="link" />
                     </UDropdown>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
 import type { GetUserRes, ReviewView, PutReviewReq } from '~/types';
-import { formatArrAsSentence, getStars, isEmpty, strToDate } from '~/util';
+import { formatArrAsSentence, getStars, isEmpty, isUserValid, strToDate } from '~/util';
 
 const emit = defineEmits(['deleteReview', 'updateReview'])
 
@@ -41,7 +41,6 @@ const { review, userInfo } = defineProps<{
     userInfo: GetUserRes
 }>()
 
-const validated = ref(false)
 const jwtToken = useCookie('jwt_token')
 
 const editingContent = ref(false)
@@ -77,13 +76,6 @@ const reviewOptions = [
     ]
 ]
 
-// validate incoming user
-if (jwtToken && jwtToken.value) {
-    const decoded: any = jwtDecode(jwtToken.value)
-    if (decoded.username === userInfo.username) {
-        validated.value = true
-    }
-}
 
 async function updateReview() {
     editingContent.value = false
