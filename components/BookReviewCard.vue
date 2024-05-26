@@ -69,10 +69,7 @@ const reviewOptions = [
             icon: 'i-heroicons-x-circle-16-solid',
             click: async () => {
                 await $fetch(`/api/review/${review.reviewid}`, {
-                    method: 'DELETE',
-                    headers: {
-                        "Authorization": `Bearer ${jwtToken.value}`
-                    }
+                    method: 'DELETE'
                 })
                 emit('deleteReview')
             }
@@ -95,9 +92,6 @@ async function updateReview() {
         body: <PutReviewReq>{
             content: reviewContent.value,
             rating: reviewRating.value
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     emit('updateReview', review.reviewid)

@@ -71,8 +71,6 @@ import { isEmpty, formatArrAsSentence } from '~/util';
 
 const emit = defineEmits(['postReview'])
 
-const jwtToken = useCookie('jwt_token')
-
 const searchQuery = ref('')
 const rawSearchInput = ref('')
 
@@ -118,9 +116,6 @@ async function onPostReview(rating: number, content: string) {
     if (selectedReviewBook !== undefined) {
         const res = await $fetch('/api/review', {
             method: 'POST',
-            headers: {
-                "Authorization": `Bearer ${jwtToken.value}`
-            },
             body: <PostReviewReq>{
                 content: content,
                 rating: rating,

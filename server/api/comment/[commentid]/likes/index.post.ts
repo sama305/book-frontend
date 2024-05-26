@@ -1,21 +1,15 @@
 export default defineEventHandler(async (event) => {
-    const authHeader = getHeaders(event).authorization
     const config = useRuntimeConfig()
     const commentid = getRouterParam(event, 'commentid')
 	
     try {
-        if (authHeader) {
-            const res = await $fetch(`${config.public.backendBaseURL}/comment/${commentid}/likes`, {
-                method: "POST",
-                headers: {
-                    "Authorization": authHeader
-                },
-            })
-            return res
-        }
-        else {
-            throw createError({ message: "No auth token provided." })
-        }
+        const res = await $fetch(`${config.public.backendBaseURL}/comment/${commentid}/likes`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${event.context.auth.token}`
+            },
+        })
+        return res
     }
     catch (e: any) {
         throw createError(e)

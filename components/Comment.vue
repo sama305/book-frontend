@@ -48,19 +48,13 @@ if (jwtToken && jwtToken.value) {
 
 async function likeComment() {
     await $fetch(`/api/comment/${comment.commentid}/likes` ,{
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'POST'
     })
 }
 
 async function unlikeComment() {
     await $fetch(`/api/comment/${comment.commentid}/likes` ,{
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'DELETE'
     })
 }
 

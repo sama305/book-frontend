@@ -17,8 +17,6 @@ const { review } = defineProps<{
     review: ReviewView
 }>()
 
-const jwtToken = useCookie('jwt_token')
-
 const emit = defineEmits(['updateReview'])
 
 async function onSaveChanges(rating: number, content: string) {
@@ -27,9 +25,6 @@ async function onSaveChanges(rating: number, content: string) {
         body: <PutReviewReq>{
             content,
             rating
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     emit('updateReview')

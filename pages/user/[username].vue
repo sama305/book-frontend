@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetUserRes, PatchDescReq, GetVolumeRes } from '~/types';
+import type { PatchDescReq } from '~/types';
 import { isEmpty, strToDate } from '~/util';
 import { jwtDecode } from "jwt-decode"
 
@@ -111,10 +111,7 @@ const userDescription = ref('')
 const userReviews: Ref<Array<any>> = ref([]);
 
 const userInfo = await $fetch(`/api/user/${username}`, {
-    method: 'GET',
-    headers: {
-        "Authorization": `Bearer ${jwtToken.value}`
-    }
+    method: 'GET'
 })
 
 const reviewInfo = await $fetch(`/api/user/${userInfo.username}/reviews/stats`, {
@@ -148,9 +145,6 @@ async function onSaveDesc() {
         method: 'PATCH',
         body: <PatchDescReq>{
             description: userDescription.value
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
 }
@@ -163,9 +157,6 @@ async function getPageOfReviews(page: number) {
         params: {
             page,
             booksPerPage
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     userReviews.value = res
@@ -198,19 +189,13 @@ function isNotSelf() {
 
 async function followUser() {
     await $fetch(`/api/user/${username}/follows`, {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'POST'
     })
 }
 
 async function unfollowUser() {
     await $fetch(`/api/user/${username}/follows`, {
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'DELETE'
     })
 }
 

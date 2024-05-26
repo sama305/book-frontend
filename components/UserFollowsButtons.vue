@@ -29,8 +29,6 @@
 </template>
 
 <script setup lang="ts">
-const jwtToken = useCookie('jwt_token')
-
 const { username, followercount, followingcount } = defineProps<{
     username: string,
     followercount: number,
@@ -38,16 +36,10 @@ const { username, followercount, followingcount } = defineProps<{
 }>()
 
 const followers = await $fetch(`/api/user/${username}/followers`, {
-    method: 'GET',
-    headers: {
-        "Authorization": `Bearer ${jwtToken.value}`
-    }
+    method: 'GET'
 })
 const following = await $fetch(`/api/user/${username}/following`, {
-    method: 'GET',
-    headers: {
-        "Authorization": `Bearer ${jwtToken.value}`
-    }
+    method: 'GET'
 })
 
 const followersModal = ref(false)

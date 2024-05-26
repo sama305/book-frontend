@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { jwtDecode } from 'jwt-decode';
-import type { PutReviewReq, ReviewView } from '~/types';
+import type { ReviewView } from '~/types';
 import { formatArrAsSentence, getStars, strToDate } from '~/util';
 
 const emit = defineEmits(['deleteReview', 'onOpenReview', 'updateReview'])
@@ -104,10 +104,7 @@ const reviewOptions = [
             icon: 'i-heroicons-x-circle-16-solid',
             click: async () => {
                 await $fetch(`/api/review/${review.reviewid}`, {
-                    method: 'DELETE',
-                    headers: {
-                        "Authorization": `Bearer ${jwtToken.value}`
-                    }
+                    method: 'DELETE'
                 })
                 emit('deleteReview')
             }
@@ -117,19 +114,13 @@ const reviewOptions = [
 
 async function onLikeReview(reviewid: string) {
     await $fetch(`/api/review/${reviewid}/likes`, {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'POST'
     })
 }
 
 async function onUnlikeReview(reviewid: string) {
     await $fetch(`/api/review/${reviewid}/likes`, {
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'DELETE'
     })
 }
 

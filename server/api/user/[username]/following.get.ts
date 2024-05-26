@@ -1,7 +1,6 @@
 import { GetUserFollowingRes } from "~/types"
 
 export default defineEventHandler(async (event) => {
-    const authHeader = getHeaders(event).authorization
     const username = getRouterParam(event, 'username')
     const config = useRuntimeConfig()
 	
@@ -9,7 +8,7 @@ export default defineEventHandler(async (event) => {
         const res: GetUserFollowingRes = await $fetch(`${config.public.backendBaseURL}/user/${username}/following`, {
             method: "GET",
             headers: {
-                "Authorization": authHeader ?? ""
+                "Authorization": `Bearer ${event.context.auth.token}`
             }
         })
         return res

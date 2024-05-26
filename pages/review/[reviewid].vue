@@ -73,7 +73,6 @@ import { formatArrAsSentence, getStars, isEmpty, strToDate } from '~/util';
 import type { GetReviewCommentsRes, PostReviewCommentReq } from '~/types'
 
 const reviewid = useRoute().params.reviewid
-const jwtToken = useCookie('jwt_token')
 
 const commentBody = ref('')
 const currentPage = ref(1)
@@ -81,10 +80,7 @@ const commentsPerPage = 4
 
 
 const reviewInfo = await $fetch(`/api/review/${reviewid}`, {
-    method: 'GET',
-    headers: {
-        "Authorization": `Bearer ${jwtToken.value}`
-    }
+    method: 'GET'
 })
 const bookInfo = await $fetch(`/api/volume/${reviewInfo.volumeid}`, {
     method: 'GET'
@@ -105,9 +101,6 @@ async function getPageOfComments(page: number) {
         query: {
             page,
             commentsPerPage
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     
@@ -121,9 +114,6 @@ async function postComment() {
         method: 'POST',
         body: <PostReviewCommentReq>{
             content: commentBody.value
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     await getPageOfComments(currentPage.value - 1)
@@ -139,19 +129,13 @@ async function calcNumPages() {
 
 async function onLikeReview() {
     await $fetch(`/api/review/${reviewid}/likes`, {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'POST'
     })
 }
 
 async function onUnlikeReview() {
     await $fetch(`/api/review/${reviewid}/likes`, {
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'DELETE'
     })
 }
 

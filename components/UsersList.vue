@@ -23,8 +23,6 @@
 </template>
 
 <script setup lang="ts">
-const jwtToken = useCookie('jwt_token')
-
 const { users, totalUsers } = defineProps<{
     users: Array<{
         username: string,
@@ -40,19 +38,13 @@ const currentPageOfUsers = computed(() => users.slice((currentPage.value - 1) * 
 
 async function followUser(user: string) {
     await $fetch(`/api/user/${user}/follows`, {
-        method: 'POST',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'POST'
     })
 }
 
 async function unfollowUser(user: string) {
     await $fetch(`/api/user/${user}/follows`, {
-        method: 'DELETE',
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
-        }
+        method: 'DELETE'
     })
 }
 </script>

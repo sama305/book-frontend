@@ -1,7 +1,6 @@
 import { GetUserReviewsRes } from "~/types"
 
 export default defineEventHandler(async (event) => {
-    const authHeader = getHeaders(event).authorization
     const username = getRouterParam(event, 'username')
     const config = useRuntimeConfig()
     const queries: { page: number, booksPerPage: number } = await getQuery(event)
@@ -16,7 +15,7 @@ export default defineEventHandler(async (event) => {
                 amount: queries.booksPerPage,
             },
             headers: {
-                "Authorization": authHeader ?? ""
+                "Authorization": `Bearer ${event.context.auth.token}`
             }
         })
         return res

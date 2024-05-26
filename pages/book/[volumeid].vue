@@ -61,7 +61,6 @@ import { useRoute } from 'vue-router';
 import type { GetVolumeReviewsRes } from '~/types';
 import { formatArrAsSentence, getStars } from '~/util';
 
-const jwtToken = useCookie('jwt_token')
 const volumeid = useRoute().params.volumeid
 const descModal = ref(false)
 const currentPage = ref(1)
@@ -97,9 +96,6 @@ async function getPageOfReviews(page: number) {
         params: {
             page,
             reviewsPerPage
-        },
-        headers: {
-            "Authorization": `Bearer ${jwtToken.value}`
         }
     })
     reviews.value = res
